@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Model files (QVAC caches models in ~/.qvac/models, but never commit any here)
+*.gguf
+*.bin
+*.onnx
+models/
+.qvac/
+
+# Generated audio and uploads
+tts-cache/
+uploads/
+
+# Secrets (we use none, but never commit them)
+.env
+.env.*
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
