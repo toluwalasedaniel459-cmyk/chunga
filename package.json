@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Offline mobile-money scam detector powered by QVAC",
   "scripts": {
-    "smoke": "node scripts/smoke-test.js"
+    "smoke": "node scripts/smoke-test.js",
+    "eval": "node scripts/eval.js"
   },
   "keywords": [],
   "author": "",

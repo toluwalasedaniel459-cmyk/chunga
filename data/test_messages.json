@@ -1,0 +1,257 @@
+{
+  "_note": "Synthetic test set written by the Chunga team. All names, codes and amounts are made up. Phone numbers are masked with X so no real number is used.",
+  "messages": [
+    {
+      "id": "scam-01",
+      "label": "SCAM",
+      "category": "fake reversal",
+      "sender": "+2547XX XXX 214",
+      "text": "SJK4H7XQ2P Confirmed. You have received Ksh 3,500.00 from JOHN KAMAU 07XX XXX 214 on 12/10/26 at 3:41 PM. New M-PESA balance is Ksh 3,612.00."
+    },
+    {
+      "id": "scam-02",
+      "label": "SCAM",
+      "category": "fake reversal",
+      "sender": "+2547XX XXX 214",
+      "text": "Hello, I have sent you 3,500 by mistake, it was meant for my mother's hospital bill. Please send it back to 07XX XXX 214. God bless you."
+    },
+    {
+      "id": "scam-03",
+      "label": "SCAM",
+      "category": "fake reversal",
+      "sender": "+2541XX XXX 908",
+      "text": "Habari, nimekutumia pesa kimakosa Ksh 2,000. Tafadhali nirudishie kwa hii namba 01XX XXX 908, ni ya karo ya mtoto."
+    },
+    {
+      "id": "scam-04",
+      "label": "SCAM",
+      "category": "fake reversal",
+      "sender": "+2547XX XXX 377",
+      "text": "Boss nimekosea kutuma doh yako 1500 ilienda kwako. Tafadhali irudishe haraka sasa hivi, niko stage nangoja mat."
+    },
+    {
+      "id": "scam-05",
+      "label": "SCAM",
+      "category": "fake agent call",
+      "sender": "+2547XX XXX 650",
+      "text": "Good afternoon, this is Peter from Safaricom customer care. We are updating M-PESA accounts and your line will be suspended today. Please tell me the code we have just sent to your phone so we can verify you."
+    },
+    {
+      "id": "scam-06",
+      "label": "SCAM",
+      "category": "fake agent call",
+      "sender": "+2547XX XXX 112",
+      "text": "Hello mteja, naitwa Mary kutoka huduma kwa wateja wa Safaricom. Laini yako itafungwa leo kwa sababu ya usajili. Nitumie namba yako ya siri ya M-PESA ili tuthibitishe akaunti."
+    },
+    {
+      "id": "scam-07",
+      "label": "SCAM",
+      "category": "fake agent call",
+      "sender": "+2547XX XXX 803",
+      "text": "Dear customer, your M-PESA account has been blocked due to suspicious activity. Call our agent on 07XX XXX 803 immediately to reactivate it."
+    },
+    {
+      "id": "scam-08",
+      "label": "SCAM",
+      "category": "PIN/OTP phishing",
+      "sender": "+2547XX XXX 449",
+      "text": "Your M-PESA PIN will expire in 24 hours. To keep your account active reply with your current PIN and ID number."
+    },
+    {
+      "id": "scam-09",
+      "label": "SCAM",
+      "category": "PIN/OTP phishing",
+      "sender": "+2541XX XXX 520",
+      "text": "Samahani, nimetuma code kwa namba yako kimakosa nikiregister WhatsApp. Tafadhali nitumie hiyo code ya namba 6 haraka."
+    },
+    {
+      "id": "scam-10",
+      "label": "SCAM",
+      "category": "PIN/OTP phishing",
+      "sender": "+2547XX XXX 731",
+      "text": "M-PESA security update: verify your account at http://mpesa-verify-ke.xyz/login and enter your PIN to avoid deactivation."
+    },
+    {
+      "id": "scam-11",
+      "label": "SCAM",
+      "category": "fake prize",
+      "sender": "+2547XX XXX 266",
+      "text": "CONGRATULATIONS! You have won Ksh 50,000 in the Safaricom 25th Anniversary promotion. To receive your prize send Ksh 499 processing fee to 07XX XXX 266."
+    },
+    {
+      "id": "scam-12",
+      "label": "SCAM",
+      "category": "fake prize",
+      "sender": "+2547XX XXX 590",
+      "text": "Hongera! Umeshinda zawadi ya Ksh 100,000 na simu mpya kwenye droo ya Bonga. Piga 07XX XXX 590 sasa hivi kudai zawadi yako kabla ya saa kumi na mbili."
+    },
+    {
+      "id": "scam-13",
+      "label": "SCAM",
+      "category": "fake prize",
+      "sender": "+2547XX XXX 017",
+      "text": "Your 12,450 Bonga Points expire today! Redeem them for cash now at www.bonga-redeem-ke.top before midnight."
+    },
+    {
+      "id": "scam-14",
+      "label": "SCAM",
+      "category": "fake loan",
+      "sender": "+2547XX XXX 338",
+      "text": "You have qualified for an instant loan of Ksh 35,000 with no CRB check. Pay a registration fee of Ksh 350 to activate your loan today."
+    },
+    {
+      "id": "scam-15",
+      "label": "SCAM",
+      "category": "fake loan",
+      "sender": "+2541XX XXX 671",
+      "text": "Umepata mkopo wa Ksh 20,000 bila guarantor. Lipa ada ya usajili Ksh 300 kwa 01XX XXX 671 ili pesa itumwe kwa M-PESA yako leo tu."
+    },
+    {
+      "id": "scam-16",
+      "label": "SCAM",
+      "category": "fake job",
+      "sender": "+2547XX XXX 155",
+      "text": "Job opportunity! Supermarket attendants needed in Nairobi, salary Ksh 28,000. Send Ksh 1,000 for medical and uniform to 07XX XXX 155 to secure your slot. Only 5 slots left."
+    },
+    {
+      "id": "scam-17",
+      "label": "SCAM",
+      "category": "fake job",
+      "sender": "+2547XX XXX 902",
+      "text": "Work from home and earn Ksh 3,000 daily by liking videos online. Register now at https://earn-daily-ke.site and pay the activation fee of Ksh 500."
+    },
+    {
+      "id": "scam-18",
+      "label": "SCAM",
+      "category": "fake agent call",
+      "sender": "+2547XX XXX 488",
+      "text": "Hi, I'm calling from M-PESA head office. We sent you money by mistake during a system upgrade. I will guide you to reverse it, just dial the menu and enter your PIN when I tell you."
+    },
+    {
+      "id": "scam-19",
+      "label": "SCAM",
+      "category": "fake reversal",
+      "sender": "+2547XX XXX 214",
+      "text": "Ndugu, mbona hujarudisha pesa yangu? Nimekupigia mara tatu. Rudisha 3,500 sasa hivi ama nitakuripoti kwa polisi."
+    },
+    {
+      "id": "scam-20",
+      "label": "SCAM",
+      "category": "fake prize",
+      "sender": "+2547XX XXX 760",
+      "text": "Dear winner, your Ksh 75,000 cash reward from the Safaricom customer appreciation draw is ready. Send your M-PESA PIN to our officer on WhatsApp 07XX XXX 760 to release it."
+    },
+    {
+      "id": "scam-21",
+      "label": "SCAM",
+      "category": "fake reversal",
+      "sender": "+2547XX XXX 101",
+      "text": "Hi dear, kindly assist me, I wrongly transferred Ksh 4,000 to your line. Kindly reverse it back to me, I am stranded."
+    },
+    {
+      "id": "scam-22",
+      "label": "SCAM",
+      "category": "new number",
+      "sender": "+2547XX XXX 222",
+      "text": "Mambo, ni mimi Kevin, nimebadilisha namba. Nitumie 2k nitakurudishia kesho, ni emergency."
+    },
+    {
+      "id": "scam-23",
+      "label": "SCAM",
+      "category": "fake prize",
+      "sender": "+2547XX XXX 333",
+      "text": "Safaricom: You have been selected for a free 50GB data bundle. Claim at safaricom-gift.online"
+    },
+    {
+      "id": "safe-01",
+      "label": "SAFE",
+      "category": "real M-Pesa receipt",
+      "sender": "MPESA",
+      "text": "TJA7K2LM4Q Confirmed. You have received Ksh 1,200.00 from GRACE WANJIRU on 14/10/26 at 9:12 AM. New M-PESA balance is Ksh 4,830.50."
+    },
+    {
+      "id": "safe-02",
+      "label": "SAFE",
+      "category": "real M-Pesa payment",
+      "sender": "MPESA",
+      "text": "TJB3P9XR1S Confirmed. Ksh 450.00 paid to MAMA NJERI SHOP. on 14/10/26 at 1:05 PM. New M-PESA balance is Ksh 4,380.50. Transaction cost, Ksh 0.00."
+    },
+    {
+      "id": "safe-03",
+      "label": "SAFE",
+      "category": "bank OTP",
+      "sender": "MYBANK",
+      "text": "Your one-time password is 482913. It expires in 5 minutes. Do not share this code with anyone, including bank staff."
+    },
+    {
+      "id": "safe-04",
+      "label": "SAFE",
+      "category": "family",
+      "sender": "+2547XX XXX 344",
+      "text": "Mum, nimefika salama Nakuru. Nitakupigia jioni nikimaliza kazi. Usijali."
+    },
+    {
+      "id": "safe-05",
+      "label": "SAFE",
+      "category": "friend",
+      "sender": "+2547XX XXX 819",
+      "text": "Niaje bro, tutaonana kesho saa nne pale stage ya Kencom. Usichelewe, tuna mechi ya saa sita."
+    },
+    {
+      "id": "safe-06",
+      "label": "SAFE",
+      "category": "real airtime",
+      "sender": "MPESA",
+      "text": "TJC8D2WN6V Confirmed. You bought Ksh 100.00 of airtime on 15/10/26 at 7:40 PM. New M-PESA balance is Ksh 2,915.00. Transaction cost, Ksh 0.00."
+    },
+    {
+      "id": "safe-07",
+      "label": "SAFE",
+      "category": "work",
+      "sender": "+2547XX XXX 205",
+      "text": "Hi Wanjiku, the staff meeting has moved to Thursday at 10 am in the main boardroom. Please bring the October sales report."
+    },
+    {
+      "id": "safe-08",
+      "label": "SAFE",
+      "category": "safety tip",
+      "sender": "Safaricom",
+      "text": "Stay safe: Safaricom will never ask for your M-PESA PIN. Never share your PIN with anyone, even if they say they work for us."
+    },
+    {
+      "id": "safe-09",
+      "label": "SAFE",
+      "category": "school",
+      "sender": "+2547XX XXX 640",
+      "text": "Dear parent, school closes on Friday 30th at 12 noon. Kindly pick up your child on time. Regards, Class teacher."
+    },
+    {
+      "id": "safe-10",
+      "label": "SAFE",
+      "category": "real withdrawal",
+      "sender": "MPESA",
+      "text": "TJD5F1QK8H Confirmed. On 16/10/26 at 11:20 AM Withdraw Ksh 2,000.00 from 123456 - XYZ AGENCIES Kenol. New M-PESA balance is Ksh 915.00. Transaction cost, Ksh 29.00."
+    },
+    {
+      "id": "safe-11",
+      "label": "SAFE",
+      "category": "hacked-account warning",
+      "sender": "+2547XX XXX 444",
+      "text": "Hey, do not send money to anyone claiming to be me, my WhatsApp was hacked."
+    },
+    {
+      "id": "safe-12",
+      "label": "SAFE",
+      "category": "real loan repayment",
+      "sender": "M-Shwari",
+      "text": "Your M-Shwari loan of Ksh 2,000 has been repaid. Thank you."
+    },
+    {
+      "id": "safe-13",
+      "label": "SAFE",
+      "category": "family",
+      "sender": "+2547XX XXX 555",
+      "text": "Usisahau kununua unga ukirudi nyumbani. Pesa iko kwa M-PESA nimekutumia."
+    }
+  ]
+}
