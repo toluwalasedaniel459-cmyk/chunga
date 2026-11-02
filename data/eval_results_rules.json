@@ -1,0 +1,448 @@
+{
+  "summary": {
+    "mode": "rules only",
+    "date": "2026-11-02T19:13:07.982Z",
+    "messages": 36,
+    "exactAccuracy": "97.2%",
+    "scamsMarkedSafe": 0,
+    "safeWronglyFlagged": 0,
+    "avgResponseMs": 1,
+    "maxResponseMs": 11,
+    "avgFirstTokenMs": null,
+    "modelLoadMs": 0
+  },
+  "rows": [
+    {
+      "id": "scam-01",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 87,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 11.416699999999764,
+        "totalMs": 11.416699999999764
+      }
+    },
+    {
+      "id": "scam-02",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 97,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 1.674300000000585,
+        "totalMs": 1.674300000000585
+      }
+    },
+    {
+      "id": "scam-03",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 97,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 9.823300000000017,
+        "totalMs": 9.823300000000017
+      }
+    },
+    {
+      "id": "scam-04",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 96,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.12930000000051223,
+        "totalMs": 0.12930000000051223
+      }
+    },
+    {
+      "id": "scam-05",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.3735999999989872,
+        "totalMs": 0.3735999999989872
+      }
+    },
+    {
+      "id": "scam-06",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.2485999999989872,
+        "totalMs": 0.2485999999989872
+      }
+    },
+    {
+      "id": "scam-07",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.10519999999996799,
+        "totalMs": 0.10519999999996799
+      }
+    },
+    {
+      "id": "scam-08",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.07819999999992433,
+        "totalMs": 0.07819999999992433
+      }
+    },
+    {
+      "id": "scam-09",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 97,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.09950000000026193,
+        "totalMs": 0.09950000000026193
+      }
+    },
+    {
+      "id": "scam-10",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.11950000000069849,
+        "totalMs": 0.11950000000069849
+      }
+    },
+    {
+      "id": "scam-11",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.08269999999902211,
+        "totalMs": 0.08269999999902211
+      }
+    },
+    {
+      "id": "scam-12",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 97,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.06370000000060827,
+        "totalMs": 0.06370000000060827
+      }
+    },
+    {
+      "id": "scam-13",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 96,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04930000000058499,
+        "totalMs": 0.04930000000058499
+      }
+    },
+    {
+      "id": "scam-14",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 96,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04650000000037835,
+        "totalMs": 0.04650000000037835
+      }
+    },
+    {
+      "id": "scam-15",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04709999999977299,
+        "totalMs": 0.04709999999977299
+      }
+    },
+    {
+      "id": "scam-16",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 96,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.05379999999968277,
+        "totalMs": 0.05379999999968277
+      }
+    },
+    {
+      "id": "scam-17",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.0452000000004773,
+        "totalMs": 0.0452000000004773
+      }
+    },
+    {
+      "id": "scam-18",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.05490000000099826,
+        "totalMs": 0.05490000000099826
+      }
+    },
+    {
+      "id": "scam-19",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04680000000007567,
+        "totalMs": 0.04680000000007567
+      }
+    },
+    {
+      "id": "scam-20",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 99,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.05249999999978172,
+        "totalMs": 0.05249999999978172
+      }
+    },
+    {
+      "id": "scam-21",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 89,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04310000000077707,
+        "totalMs": 0.04310000000077707
+      }
+    },
+    {
+      "id": "scam-22",
+      "label": "SCAM",
+      "verdict": "SUSPICIOUS",
+      "rulesVerdict": "SUSPICIOUS",
+      "confidence": 60,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04440000000067812,
+        "totalMs": 0.04440000000067812
+      }
+    },
+    {
+      "id": "scam-23",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "rulesVerdict": "SCAM",
+      "confidence": 89,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.07250000000021828,
+        "totalMs": 0.07250000000021828
+      }
+    },
+    {
+      "id": "safe-01",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.0738999999994121,
+        "totalMs": 0.0738999999994121
+      }
+    },
+    {
+      "id": "safe-02",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04700000000048021,
+        "totalMs": 0.04700000000048021
+      }
+    },
+    {
+      "id": "safe-03",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.05189999999856809,
+        "totalMs": 0.05189999999856809
+      }
+    },
+    {
+      "id": "safe-04",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.03889999999955762,
+        "totalMs": 0.03889999999955762
+      }
+    },
+    {
+      "id": "safe-05",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.036700000000564614,
+        "totalMs": 0.036700000000564614
+      }
+    },
+    {
+      "id": "safe-06",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.039399999999659485,
+        "totalMs": 0.039399999999659485
+      }
+    },
+    {
+      "id": "safe-07",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.037900000001172884,
+        "totalMs": 0.037900000001172884
+      }
+    },
+    {
+      "id": "safe-08",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.04159999999865249,
+        "totalMs": 0.04159999999865249
+      }
+    },
+    {
+      "id": "safe-09",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.03600000000005821,
+        "totalMs": 0.03600000000005821
+      }
+    },
+    {
+      "id": "safe-10",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.037599999999656575,
+        "totalMs": 0.037599999999656575
+      }
+    },
+    {
+      "id": "safe-11",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.03360000000066066,
+        "totalMs": 0.03360000000066066
+      }
+    },
+    {
+      "id": "safe-12",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.030300000000352156,
+        "totalMs": 0.030300000000352156
+      }
+    },
+    {
+      "id": "safe-13",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "rulesVerdict": "SAFE",
+      "confidence": 70,
+      "decidedBy": "rules only",
+      "timing": {
+        "rulesMs": 0.031899999999950523,
+        "totalMs": 0.031899999999950523
+      }
+    }
+  ]
+}

@@ -1,41 +1,83 @@
 // Turns a message into a full Chunga result: verdict, confidence, reasons, advice.
 //
-// Step 1: rules only. Step 2 will add the local QVAC LLM and combine the two
-// (rules can raise or override the LLM so results stay stable).
-import { runRules, verdictFromScore } from './rules.js'
+// Flow:  rules (instant)  →  local QVAC LLM  →  combine()  →  user-facing result
+import { runRules } from './rules.js'
+import { parseLlmOutput } from './parse.js'
+import { combine, RULE_WEIGHT } from '../combine.js'
+import { askLlm } from '../qvac/llm.js'
 import { VERDICT_LABELS, REASONS, ADVICE } from './messages.js'
 
-// How sure we are, from the rule score (0–100). Kept simple on purpose.
-function confidenceFromScore (verdict, score) {
-  if (verdict === 'SCAM') return Math.min(0.99, 0.7 + score / 350)
-  if (verdict === 'SUSPICIOUS') return 0.6
-  return score === 0 ? 0.7 : 0.55
-}
-
 // Build the user-facing result in the chosen language ('en' or 'sw').
-export function buildResult ({ verdict, confidence, codes, source }, lang = 'en') {
-  // Show at most 3 reasons, strongest first (rules are already ordered by weight).
-  const shownCodes = codes.length ? codes.slice(0, 3) : ['NO_RED_FLAGS']
+export function buildResult (combined, lang = 'en') {
+  const { verdict, confidence, flags, decidedBy, ai } = combined
+
+  // Up to 3 reasons: strongest rule flags first, then new AI flags.
+  const ruleFlags = flags.filter((f) => f.source === 'rule').sort((a, b) => RULE_WEIGHT[b.code] - RULE_WEIGHT[a.code])
+  const aiFlags = flags.filter((f) => f.source === 'ai')
+  let shown = [...ruleFlags, ...aiFlags].slice(0, 3)
+  if (shown.length === 0) shown = [{ source: 'rule', code: verdict === 'SAFE' ? 'NO_RED_FLAGS' : 'AI_FLAGGED' }]
+
+  const reasons = shown.map((f) => ({
+    source: f.source,
+    code: f.code ?? null,
+    // Rule flags use our checked EN/SW text. The AI writes its flags in English.
+    text: f.code ? REASONS[f.code][lang] : f.text
+  }))
+
+  // The AI's one-line summary, only when it agrees with the final verdict
+  // (otherwise it would contradict what we show).
+  const summary = ai && ai.verdict === verdict ? (lang === 'sw' ? ai.explanation_sw : ai.explanation_en) : ''
+
   return {
     verdict,
     label: VERDICT_LABELS[verdict][lang],
-    confidence: Math.round(confidence * 100),
-    reasonCodes: shownCodes,
-    reasons: shownCodes.map((code) => REASONS[code][lang]),
-    advice: ADVICE[verdict].map((a) => a[lang]),
-    source,
+    confidence,
+    reasons,
+    summary,
+    advice: ADVICE[verdict].map((a) => a[lang]), // hand-written, so always clear in both languages
+    decidedBy,
     lang
   }
 }
 
-// Analyse one message. `sender` is optional (e.g. "MPESA" or "+2547...").
-export function analyse (text, { sender = '', lang = 'en' } = {}) {
+/**
+ * Analyse one message.
+ * @param text     the message
+ * @param options  sender (optional), lang 'en'|'sw', useLlm (default true),
+ *                 onRules(result) – called instantly with the rules-only result,
+ *                 onToken(rawSoFar) – called while the AI streams
+ * @returns        { result, rulesResult, timing, aiRaw }
+ */
+export async function analyse (text, { sender = '', lang = 'en', useLlm = true, onRules, onToken } = {}) {
+  const start = performance.now()
+
+  // 1. Rules first: instant, so the user sees something straight away.
   const rules = runRules(text, { sender })
-  const verdict = verdictFromScore(rules.score)
-  return buildResult({
-    verdict,
-    confidence: confidenceFromScore(verdict, rules.score),
-    codes: rules.codes,
-    source: 'rules'
-  }, lang)
+  const rulesResult = buildResult(combine(rules, null), lang)
+  const rulesMs = performance.now() - start
+  onRules?.(rulesResult)
+
+  if (!useLlm) {
+    return { result: rulesResult, rulesResult, timing: { rulesMs, totalMs: rulesMs }, aiRaw: null }
+  }
+
+  // 2. Local AI. Any failure (model error, unreadable JSON) falls back to the rules.
+  let ai = null
+  let aiRaw = null
+  let llmTiming = {}
+  try {
+    const answer = await askLlm(text, { sender, onToken })
+    aiRaw = answer.raw
+    llmTiming = answer.timing
+    ai = parseLlmOutput(answer.raw)
+    if (!ai) console.warn('[analyse] could not read AI answer, using rules only:', answer.raw.slice(0, 200))
+  } catch (err) {
+    console.warn('[analyse] AI failed, using rules only:', err.message)
+  }
+
+  // 3. Combine rules + AI.
+  const result = buildResult(combine(rules, ai), lang)
+  const timing = { rulesMs: Number(rulesMs.toFixed(2)), ...llmTiming, totalMs: Math.round(performance.now() - start) }
+  console.log(`[timing] rules ${timing.rulesMs}ms | first token ${timing.firstTokenMs ?? '-'}ms | total ${timing.totalMs}ms | ${result.verdict} (${result.decidedBy})`)
+  return { result, rulesResult, timing, aiRaw }
 }
