@@ -94,7 +94,7 @@ QVAC SDK installs all its engines, plus ~0.9 GB of models), 4 GB RAM minimum
 (8 GB recommended).
 
 ```powershell
-git clone <this repo> chunga
+git clone https://github.com/toluwalasedaniel459-cmyk/chunga.git
 cd chunga
 npm install
 npm run check-cpu        # tells you if voice notes will work on this PC
