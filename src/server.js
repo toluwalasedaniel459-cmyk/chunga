@@ -61,7 +61,7 @@ async function readBody (req, limit) {
   let size = 0
   for await (const chunk of req) {
     size += chunk.length
-    if (size > limit) throw Object.assign(new Error('File too large'), { status: 413 })
+    if (size > limit) throw Object.assign(new Error(ERRORS.TOO_LARGE), { status: 413, code: 'TOO_LARGE' })
     chunks.push(chunk)
   }
   return Buffer.concat(chunks)
@@ -71,6 +71,24 @@ function sendJson (res, code, obj) {
   res.writeHead(code, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify(obj))
 }
+
+// Errors the user can see. The page shows each `code` in English or Swahili
+// (public/app.js, UI.*.errors); the English text here is a fallback.
+const ERRORS = {
+  EMPTY_TEXT: 'Please paste a message first.',
+  TOO_LARGE: 'This file is too large. Please use a file under 25 MB.',
+  VOICE_OFF: 'Voice notes are turned off on this computer.',
+  VOICE_LOADING: 'Voice notes are still loading. Please wait.',
+  BAD_AUDIO_TYPE: 'Please use an .ogg, .opus, .mp3, .m4a or .wav file.',
+  NO_SPEECH: 'No speech was found in this recording.',
+  BAD_IMAGE_TYPE: 'Please use a .png or .jpg screenshot.',
+  NO_IMAGE_TEXT: 'No text was found in this picture.',
+  TTS_OFF: 'Reading aloud is turned off on this computer.',
+  NOTHING_TO_READ: 'Nothing to read.',
+  GENERIC: 'Something went wrong. Please try again.'
+}
+const errorBody = (code) => ({ code, error: ERRORS[code] })
+const sendError = (res, httpStatus, code) => sendJson(res, httpStatus, errorBody(code))
 
 // Start a streamed reply: each send(event) writes one JSON line.
 function startStream (res) {
@@ -102,7 +120,7 @@ async function handleCheckText (req, res) {
   const body = JSON.parse((await readBody(req, 64 * 1024)).toString('utf8') || '{}')
   const text = String(body.text || '').trim().slice(0, MAX_TEXT_CHARS)
   const sender = String(body.sender || '').trim().slice(0, 40)
-  if (!text) return sendJson(res, 400, { error: 'Please paste a message first.' })
+  if (!text) return sendError(res, 400, 'EMPTY_TEXT')
 
   const send = startStream(res)
   await inQueue(async () => {
@@ -114,11 +132,11 @@ async function handleCheckText (req, res) {
 
 async function handleCheckAudio (req, res) {
   if (status.audio !== 'ready') {
-    return sendJson(res, 503, { error: status.audio === 'off' ? 'Voice notes are turned off on this computer.' : 'Voice notes are still loading. Please wait.' })
+    return sendError(res, 503, status.audio === 'off' ? 'VOICE_OFF' : 'VOICE_LOADING')
   }
   const name = decodeURIComponent(String(req.headers['x-filename'] || 'voice.wav'))
   const ext = AUDIO_EXT[extname(name).toLowerCase()]
-  if (!ext) return sendJson(res, 415, { error: 'Please use an .ogg, .opus, .mp3, .m4a or .wav file.' })
+  if (!ext) return sendError(res, 415, 'BAD_AUDIO_TYPE')
 
   const data = await readBody(req, MAX_UPLOAD_BYTES)
   await mkdir(UPLOAD_DIR, { recursive: true })
@@ -133,7 +151,7 @@ async function handleCheckAudio (req, res) {
       const { text, ms: transcribeMs } = await transcribeFile(filePath)
       send({ type: 'transcript', text })
       if (!text) {
-        send({ type: 'error', error: 'No speech was found in this recording.' })
+        send({ type: 'error', ...errorBody('NO_SPEECH') })
         return
       }
       const timing = await streamAnalysis(send, text, '', { source: 'voice', timing: { transcribeMs } })
@@ -149,7 +167,7 @@ async function handleCheckAudio (req, res) {
 async function handleCheckImage (req, res) {
   const name = decodeURIComponent(String(req.headers['x-filename'] || 'screenshot.png'))
   const ext = IMAGE_EXT[extname(name).toLowerCase()]
-  if (!ext) return sendJson(res, 415, { error: 'Please use a .png or .jpg screenshot.' })
+  if (!ext) return sendError(res, 415, 'BAD_IMAGE_TYPE')
 
   const data = await readBody(req, MAX_UPLOAD_BYTES)
   await mkdir(UPLOAD_DIR, { recursive: true })
@@ -165,7 +183,7 @@ async function handleCheckImage (req, res) {
       status.image = 'ready'
       send({ type: 'ocr-text', text })
       if (!text) {
-        send({ type: 'error', error: 'No text was found in this picture.' })
+        send({ type: 'error', ...errorBody('NO_IMAGE_TEXT') })
         return
       }
       const timing = await streamAnalysis(send, text, '', { source: 'image', timing: { ocrMs } })
@@ -179,12 +197,12 @@ async function handleCheckImage (req, res) {
 }
 
 async function handleSpeak (req, res) {
-  if (!TTS_ENABLED) return sendJson(res, 503, { error: 'Reading aloud is turned off on this computer.' })
+  if (!TTS_ENABLED) return sendError(res, 503, 'TTS_OFF')
   const body = JSON.parse((await readBody(req, 16 * 1024)).toString('utf8') || '{}')
   const lang = body.lang === 'sw' ? 'sw' : 'en'
   // Rebuild the sentences from our own fixed text; never speak text sent by the page.
   const sentences = spokenSentences({ verdict: body.verdict, reasonCodes: Array.isArray(body.reasonCodes) ? body.reasonCodes : [] }, lang)
-  if (!sentences.length) return sendJson(res, 400, { error: 'Nothing to read.' })
+  if (!sentences.length) return sendError(res, 400, 'NOTHING_TO_READ')
 
   const { wav, ms } = await inQueue(() => speakSentences(sentences, lang))
   status.tts = 'ready'
@@ -221,11 +239,11 @@ const server = http.createServer(async (req, res) => {
     // be the user's message), so don't log it.
     if (err instanceof SyntaxError) {
       console.error('[server] request body was not valid JSON')
-      return sendJson(res, 400, { error: 'Something went wrong. Please try again.' })
+      return sendError(res, 400, 'GENERIC')
     }
     console.error('[server]', err)
-    if (!res.headersSent) sendJson(res, err.status || 500, { error: err.status ? err.message : 'Something went wrong. Please try again.' })
-    else { res.write(JSON.stringify({ type: 'error', error: 'Something went wrong. Please try again.' }) + '\n'); res.end() }
+    if (!res.headersSent) sendError(res, err.status || 500, err.code && ERRORS[err.code] ? err.code : 'GENERIC')
+    else { res.write(JSON.stringify({ type: 'error', ...errorBody('GENERIC') }) + '\n'); res.end() }
   }
 })
 

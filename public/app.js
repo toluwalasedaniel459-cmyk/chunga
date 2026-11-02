@@ -59,7 +59,21 @@ const UI = {
     tagRule: 'rule',
     tagAi: 'AI',
     decidedBy: (d) => `Decided by: ${d}`,
-    errorGeneric: 'Something went wrong. Please try again.'
+    errorGeneric: 'Something went wrong. Please try again.',
+    // Server error codes (src/server.js, ERRORS)
+    errors: {
+      EMPTY_TEXT: 'Please paste a message first.',
+      TOO_LARGE: 'This file is too large. Please use a file under 25 MB.',
+      VOICE_OFF: 'Voice notes are turned off on this computer.',
+      VOICE_LOADING: 'Voice notes are still loading. Please wait.',
+      BAD_AUDIO_TYPE: 'Please use an .ogg, .opus, .mp3, .m4a or .wav file.',
+      NO_SPEECH: 'No speech was found in this recording.',
+      BAD_IMAGE_TYPE: 'Please use a .png or .jpg screenshot.',
+      NO_IMAGE_TEXT: 'No text was found in this picture.',
+      TTS_OFF: 'Reading aloud is turned off on this computer.',
+      NOTHING_TO_READ: 'Nothing to read.',
+      GENERIC: 'Something went wrong. Please try again.'
+    }
   },
   sw: {
     tagline: 'Kagua ujumbe kabla ya kuuamini',
@@ -106,7 +120,20 @@ const UI = {
     tagRule: 'kanuni',
     tagAi: 'AI',
     decidedBy: (d) => `Imeamuliwa na: ${DECIDED_BY_SW[d] || d}`,
-    errorGeneric: 'Kuna tatizo. Tafadhali jaribu tena.'
+    errorGeneric: 'Kuna tatizo. Tafadhali jaribu tena.',
+    errors: {
+      EMPTY_TEXT: 'Tafadhali bandika ujumbe kwanza.',
+      TOO_LARGE: 'Faili hili ni kubwa mno. Tafadhali tumia faili lililo chini ya MB 25.',
+      VOICE_OFF: 'Ujumbe wa sauti umezimwa kwenye kompyuta hii.',
+      VOICE_LOADING: 'Ujumbe wa sauti bado unapakia. Tafadhali subiri.',
+      BAD_AUDIO_TYPE: 'Tafadhali tumia faili la .ogg, .opus, .mp3, .m4a au .wav.',
+      NO_SPEECH: 'Hakuna sauti ya mtu kuongea iliyopatikana kwenye rekodi hii.',
+      BAD_IMAGE_TYPE: 'Tafadhali tumia picha ya skrini ya .png au .jpg.',
+      NO_IMAGE_TEXT: 'Hakuna maandishi yaliyopatikana kwenye picha hii.',
+      TTS_OFF: 'Kusoma kwa sauti kumezimwa kwenye kompyuta hii.',
+      NOTHING_TO_READ: 'Hakuna cha kusoma.',
+      GENERIC: 'Kuna tatizo. Tafadhali jaribu tena.'
+    }
   }
 }
 
@@ -121,6 +148,10 @@ const t = (key, ...args) => {
   const v = UI[lang][key]
   return typeof v === 'function' ? v(...args) : v
 }
+
+// Turns a server error ({ code, error }) into text in the chosen language.
+const errorText = (body, fallbackKey = 'errorGeneric') =>
+  (body && UI[lang].errors[body.code]) || (body && body.error) || t(fallbackKey)
 
 // ---- Language ---------------------------------------------------------------
 function applyLanguage () {
@@ -223,7 +254,7 @@ function setBusy (value) {
 async function readStream (response, source) {
   if (!response.ok) {
     const err = await response.json().catch(() => ({}))
-    throw new Error(err.error || t('errorGeneric'))
+    throw new Error(errorText(err))
   }
   const reader = response.body.getReader()
   const decoder = new TextDecoder()
@@ -269,7 +300,7 @@ function handleEvent (ev, source) {
     stopProgress()
     renderResult(ev.result, lastSource)
   }
-  if (ev.type === 'error') throw new Error(ev.error)
+  if (ev.type === 'error') throw new Error(errorText(ev))
 }
 
 async function runCheck (makeRequest, source) {
@@ -422,7 +453,7 @@ $('speak').addEventListener('click', async () => {
       // Only reason codes are sent; the server speaks its own fixed EN/SW text.
       body: JSON.stringify({ lang, verdict: r.verdict, reasonCodes: r.reasons.filter((x) => x.code).map((x) => x.code) })
     })
-    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || t('speakError'))
+    if (!res.ok) throw new Error(errorText(await res.json().catch(() => null), 'speakError'))
     const audio = $('speak-audio')
     if (audio.src) URL.revokeObjectURL(audio.src)
     audio.src = URL.createObjectURL(await res.blob())
