@@ -1,0 +1,304 @@
+{
+  "summary": {
+    "mode": "rules + local AI (Llama 3.2 1B Q4_0, CPU)",
+    "note": "Merged from two runs with identical code (commit dae9ed0): scam-01..22 from the first run (stopped by low memory), the other 14 via eval --only.",
+    "machine": "Intel Pentium 4417U (2 cores, no AVX/AVX2), 4 GB RAM, Windows 10 Pro",
+    "messages": 36,
+    "exactAccuracy": "88.9%",
+    "scamsMarkedSafe": 0,
+    "safeWronglyFlagged": 4,
+    "safeFlaggedAsScam": 0,
+    "avgResponseMs": 152100,
+    "maxResponseMs": 225500
+  },
+  "rows": [
+    {
+      "id": "scam-01",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 87,
+      "totalMs": 145900,
+      "decidedBy": "strong rule overrides AI"
+    },
+    {
+      "id": "scam-02",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 140000,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-03",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 151200,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-04",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 142000,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-05",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 204200,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-06",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 173500,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-07",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 156800,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-08",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 134600,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-09",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 179100,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-10",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 225500,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-11",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 153700,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-12",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 187000,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-13",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 144300,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-14",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 144400,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-15",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 148100,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-16",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 149400,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-17",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 140600,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-18",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 149300,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-19",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 210600,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-20",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 180300,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-21",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 100,
+      "totalMs": 178200,
+      "decidedBy": "rules + AI agree"
+    },
+    {
+      "id": "scam-22",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 99,
+      "totalMs": 153000,
+      "decidedBy": "AI, boosted by rules"
+    },
+    {
+      "id": "scam-23",
+      "label": "SCAM",
+      "verdict": "SCAM",
+      "confidence": 89,
+      "totalMs": 139700,
+      "decidedBy": "rules raised AI verdict"
+    },
+    {
+      "id": "safe-01",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 80,
+      "totalMs": 134700,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-02",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 80,
+      "totalMs": 136000,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-03",
+      "label": "SAFE",
+      "verdict": "SUSPICIOUS",
+      "confidence": 60,
+      "totalMs": 129600,
+      "decidedBy": "AI only (capped at SUSPICIOUS)"
+    },
+    {
+      "id": "safe-04",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 95,
+      "totalMs": 131700,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-05",
+      "label": "SAFE",
+      "verdict": "SUSPICIOUS",
+      "confidence": 60,
+      "totalMs": 141900,
+      "decidedBy": "AI only (capped at SUSPICIOUS)"
+    },
+    {
+      "id": "safe-06",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 80,
+      "totalMs": 132500,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-07",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 100,
+      "totalMs": 128300,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-08",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 100,
+      "totalMs": 134000,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-09",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 100,
+      "totalMs": 124800,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-10",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 80,
+      "totalMs": 141700,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-11",
+      "label": "SAFE",
+      "verdict": "SUSPICIOUS",
+      "confidence": 60,
+      "totalMs": 140400,
+      "decidedBy": "AI only (capped at SUSPICIOUS)"
+    },
+    {
+      "id": "safe-12",
+      "label": "SAFE",
+      "verdict": "SAFE",
+      "confidence": 100,
+      "totalMs": 130900,
+      "decidedBy": "AI"
+    },
+    {
+      "id": "safe-13",
+      "label": "SAFE",
+      "verdict": "SUSPICIOUS",
+      "confidence": 60,
+      "totalMs": 137700,
+      "decidedBy": "AI only (capped at SUSPICIOUS)"
+    }
+  ]
+}
