@@ -14,7 +14,8 @@
     "check-cpu": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-cpu.ps1",
     "make-images": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-images.ps1",
     "bench-ocr": "node scripts/bench-ocr.js",
-    "prepare-voice": "node scripts/prepare-voice.js"
+    "prepare-voice": "node scripts/prepare-voice.js",
+    "make-cover": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-cover.ps1"
   },
   "keywords": [],
   "author": "",

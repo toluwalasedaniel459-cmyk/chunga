@@ -1,5 +1,7 @@
 # Chunga – offline scam checker for mobile money
 
+![Chunga: Is this message a scam? Ask Chunga.](docs/cover.png)
+
 **Chunga** ("watch out" in Swahili) tells you whether an SMS, WhatsApp message or
 voice note is a mobile-money scam, explains why in simple English or Swahili,
 and tells you what to do next.
