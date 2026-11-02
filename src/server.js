@@ -2,6 +2,7 @@
 // needed once the models are downloaded (npm run setup-models).
 //
 //   npm start            → http://localhost:3000
+//   CHUNGA_AI=off        → rules only, no LLM (instant, less memory)
 //   CHUNGA_AUDIO=on      → also load Whisper for voice notes
 //                          (off by default: QVAC's speech engine crashes on CPUs
 //                          without AVX/AVX2, and the crash would stop the LLM too)
@@ -33,6 +34,7 @@ const PUBLIC_DIR = join(ROOT, 'public')
 const UPLOAD_DIR = join(ROOT, 'uploads')
 const AUDIO_ENABLED = process.env.CHUNGA_AUDIO === 'on'
 const TTS_ENABLED = process.env.CHUNGA_TTS === 'on'
+const AI_ENABLED = process.env.CHUNGA_AI !== 'off'
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024 // 25 MB is plenty for a voice note
 const MAX_TEXT_CHARS = 2000
 
@@ -43,7 +45,7 @@ const AUDIO_EXT = { '.mp3': '.mp3', '.m4a': '.m4a', '.ogg': '.ogg', '.opus': '.o
 const IMAGE_EXT = { '.png': '.png', '.jpg': '.jpg', '.jpeg': '.jpg', '.bmp': '.bmp' }
 
 // ---- Model status, shown in the UI ("Loading AI…") -------------------------
-const status = { llm: 'loading', audio: AUDIO_ENABLED ? 'loading' : 'off', image: 'on-demand', tts: TTS_ENABLED ? 'on-demand' : 'off', whisperModel: WHISPER_MODEL_NAME }
+const status = { llm: AI_ENABLED ? 'loading' : 'off', audio: AUDIO_ENABLED ? 'loading' : 'off', image: 'on-demand', tts: TTS_ENABLED ? 'on-demand' : 'off', whisperModel: WHISPER_MODEL_NAME }
 
 // The LLM runs one job at a time, so checks wait in line.
 let queue = Promise.resolve()
@@ -258,10 +260,14 @@ server.listen(PORT, '127.0.0.1', () => {
 })
 
 // Load models ONCE at startup, in the background. Text checks work with
-// rules only until the AI is ready.
-initLlm()
-  .then(() => { status.llm = 'ready' })
-  .catch((err) => { status.llm = 'error'; console.error('[llm] failed to load:', err.message) })
+// rules only until the AI is ready. CHUNGA_AI=off skips the LLM entirely
+// (rules only: instant, and ~0.8 GB less memory on small laptops).
+const llmReady = AI_ENABLED
+  ? initLlm()
+    .then(() => { status.llm = 'ready' })
+    .catch((err) => { status.llm = 'error'; console.error('[llm] failed to load:', err.message) })
+  : Promise.resolve()
+llmReady
   .then(() => {
     // Load Whisper after the LLM so the two downloads/loads don't fight for memory.
     if (!AUDIO_ENABLED) return

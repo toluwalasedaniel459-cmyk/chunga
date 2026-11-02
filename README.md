@@ -52,6 +52,16 @@ people with the least data and the least trust in cloud apps.
 | Screenshot of a message (.png / .jpg), read offline with QVAC OCR | ✅ Working; slow on old CPUs (7.5 min per screenshot on our test laptop) |
 | Read the verdict aloud in Swahili or English (QVAC text-to-speech, Chatterbox multilingual), with every sentence cached after first use | ⚠️ Built; **needs a CPU with AVX2** (see [Known limitations](#known-limitations)) |
 
+### Screenshots
+
+| Fake reversal SMS pasted | SCAM verdict + red flags | Same result in Swahili | SAFE on a real M-PESA receipt |
+|---|---|---|---|
+| <img src="docs/screenshots/1-home-pasted-sms.png" width="190" alt="Home screen with a fake M-PESA reversal SMS pasted in"> | <img src="docs/screenshots/2-scam-verdict.png" width="190" alt="SCAM verdict, 97% confidence, with reasons and advice"> | <img src="docs/screenshots/3-swahili-explanation.png" width="190" alt="NI UTAPELI verdict with the explanation in Swahili"> | <img src="docs/screenshots/4-safe-result.png" width="190" alt="LOOKS SAFE verdict for a normal M-PESA receipt"> |
+
+Real screenshots of the app (headless Edge at 390×844, `npm run screenshots`),
+taken with `CHUNGA_AI=off`, so they show the instant rules result ("Decided by:
+rules only"). With the AI on, the same screen shows the AI's double-check when it finishes.
+
 ## How it works
 
 ```mermaid
@@ -150,6 +160,8 @@ work with the rules during that time.
 | `npm run bench` / `npm run bench-whisper` | Speed tests for the LLM / Whisper |
 | `npm run make-audio` | Re-create the synthetic test voice notes (Windows voices, offline) |
 | `npm run smoke` | Minimal QVAC test: load the LLM and answer one question |
+| `$env:CHUNGA_AI="off"; npm start` | Rules only, no LLM: instant answers, ~0.8 GB less memory |
+| `npm run screenshots` | Re-take the README screenshots (app must be running) |
 
 ## QVAC usage
 
