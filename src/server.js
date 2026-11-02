@@ -17,7 +17,7 @@
 //   POST /api/speak  {lang, verdict, reasonCodes} → audio/wav (needs CHUNGA_TTS=on;
 //        like Whisper, QVAC's TTS engine crashes on CPUs without AVX/AVX2)
 import http from 'node:http'
-import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, unlink, rm } from 'node:fs/promises'
 import { extname, join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { analyse } from './detect/analyse.js'
@@ -217,11 +217,21 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET') return await serveStatic(req, res)
     sendJson(res, 404, { error: 'Not found' })
   } catch (err) {
+    // A bad JSON body: Node's error message quotes part of the body (which may
+    // be the user's message), so don't log it.
+    if (err instanceof SyntaxError) {
+      console.error('[server] request body was not valid JSON')
+      return sendJson(res, 400, { error: 'Something went wrong. Please try again.' })
+    }
     console.error('[server]', err)
     if (!res.headersSent) sendJson(res, err.status || 500, { error: err.status ? err.message : 'Something went wrong. Please try again.' })
     else { res.write(JSON.stringify({ type: 'error', error: 'Something went wrong. Please try again.' }) + '\n'); res.end() }
   }
 })
+
+// Uploads are deleted after each check; this also removes any left behind if
+// the app was closed or crashed in the middle of a check.
+await rm(UPLOAD_DIR, { recursive: true, force: true })
 
 // Only listen on this computer (127.0.0.1), not the network.
 server.listen(PORT, '127.0.0.1', () => {

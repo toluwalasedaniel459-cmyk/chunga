@@ -77,7 +77,8 @@ export async function analyse (text, { sender = '', lang = 'en', useLlm = true, 
     aiRaw = answer.raw
     llmTiming = answer.timing
     ai = parseLlmOutput(answer.raw)
-    if (!ai) console.warn('[analyse] could not read AI answer, using rules only:', answer.raw.slice(0, 200))
+    // Log only the length: the AI's answer can quote the user's message.
+    if (!ai) console.warn(`[analyse] could not read AI answer (${answer.raw.length} chars), using rules only`)
   } catch (err) {
     console.warn('[analyse] AI failed, using rules only:', err.message)
   }

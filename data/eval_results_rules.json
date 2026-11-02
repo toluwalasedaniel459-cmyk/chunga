@@ -1,13 +1,13 @@
 {
   "summary": {
     "mode": "rules only",
-    "date": "2026-11-02T23:20:13.604Z",
+    "date": "2026-11-02T23:40:56.183Z",
     "messages": 36,
     "exactAccuracy": "97.2%",
     "scamsMarkedSafe": 0,
     "safeWronglyFlagged": 0,
     "avgResponseMs": 1,
-    "maxResponseMs": 16,
+    "maxResponseMs": 12,
     "avgFirstTokenMs": null,
     "modelLoadMs": 0
   },
@@ -20,8 +20,8 @@
       "confidence": 87,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 7.70049999999992,
-        "totalMs": 7.70049999999992
+        "rulesMs": 7.984100000000126,
+        "totalMs": 7.984100000000126
       }
     },
     {
@@ -32,8 +32,8 @@
       "confidence": 97,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 1.990199999999959,
-        "totalMs": 1.990199999999959
+        "rulesMs": 1.824100000000044,
+        "totalMs": 1.824100000000044
       }
     },
     {
@@ -44,8 +44,8 @@
       "confidence": 97,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 16.411299999999983,
-        "totalMs": 16.411299999999983
+        "rulesMs": 12.056800000000067,
+        "totalMs": 12.056800000000067
       }
     },
     {
@@ -56,8 +56,8 @@
       "confidence": 96,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.2037000000000262,
-        "totalMs": 0.2037000000000262
+        "rulesMs": 0.18020000000001346,
+        "totalMs": 0.18020000000001346
       }
     },
     {
@@ -68,8 +68,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.6014000000000124,
-        "totalMs": 0.6014000000000124
+        "rulesMs": 0.5769999999999982,
+        "totalMs": 0.5769999999999982
       }
     },
     {
@@ -80,8 +80,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.34149999999999636,
-        "totalMs": 0.34149999999999636
+        "rulesMs": 0.33769999999981337,
+        "totalMs": 0.33769999999981337
       }
     },
     {
@@ -92,8 +92,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.1999999999998181,
-        "totalMs": 0.1999999999998181
+        "rulesMs": 0.14679999999998472,
+        "totalMs": 0.14679999999998472
       }
     },
     {
@@ -104,8 +104,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.13770000000022264,
-        "totalMs": 0.13770000000022264
+        "rulesMs": 0.09989999999993415,
+        "totalMs": 0.09989999999993415
       }
     },
     {
@@ -116,8 +116,8 @@
       "confidence": 97,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.16830000000004475,
-        "totalMs": 0.16830000000004475
+        "rulesMs": 0.11289999999985412,
+        "totalMs": 0.11289999999985412
       }
     },
     {
@@ -128,8 +128,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.2441999999998643,
-        "totalMs": 0.2441999999998643
+        "rulesMs": 0.12040000000001783,
+        "totalMs": 0.12040000000001783
       }
     },
     {
@@ -140,8 +140,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.17290000000002692,
-        "totalMs": 0.17290000000002692
+        "rulesMs": 0.09429999999997563,
+        "totalMs": 0.09429999999997563
       }
     },
     {
@@ -152,8 +152,8 @@
       "confidence": 97,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.15520000000014988,
-        "totalMs": 0.15520000000014988
+        "rulesMs": 0.11000000000012733,
+        "totalMs": 0.11000000000012733
       }
     },
     {
@@ -164,8 +164,8 @@
       "confidence": 96,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.09609999999997854,
-        "totalMs": 0.09609999999997854
+        "rulesMs": 0.10029999999983374,
+        "totalMs": 0.10029999999983374
       }
     },
     {
@@ -176,8 +176,8 @@
       "confidence": 96,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.07130000000006476,
-        "totalMs": 0.07130000000006476
+        "rulesMs": 0.06529999999997926,
+        "totalMs": 0.06529999999997926
       }
     },
     {
@@ -188,8 +188,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.06560000000013133,
-        "totalMs": 0.06560000000013133
+        "rulesMs": 0.06380000000012842,
+        "totalMs": 0.06380000000012842
       }
     },
     {
@@ -200,8 +200,8 @@
       "confidence": 96,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.07290000000011787,
-        "totalMs": 0.07290000000011787
+        "rulesMs": 0.0684000000001106,
+        "totalMs": 0.0684000000001106
       }
     },
     {
@@ -212,8 +212,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.059799999999995634,
-        "totalMs": 0.059799999999995634
+        "rulesMs": 0.05880000000001928,
+        "totalMs": 0.05880000000001928
       }
     },
     {
@@ -224,8 +224,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.0747999999998683,
-        "totalMs": 0.0747999999998683
+        "rulesMs": 0.0907999999999447,
+        "totalMs": 0.0907999999999447
       }
     },
     {
@@ -236,8 +236,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.06430000000000291,
-        "totalMs": 0.06430000000000291
+        "rulesMs": 0.06009999999992033,
+        "totalMs": 0.06009999999992033
       }
     },
     {
@@ -248,8 +248,8 @@
       "confidence": 99,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.07519999999999527,
-        "totalMs": 0.07519999999999527
+        "rulesMs": 0.06599999999980355,
+        "totalMs": 0.06599999999980355
       }
     },
     {
@@ -260,8 +260,8 @@
       "confidence": 89,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.06529999999997926,
-        "totalMs": 0.06529999999997926
+        "rulesMs": 0.053900000000112414,
+        "totalMs": 0.053900000000112414
       }
     },
     {
@@ -272,8 +272,8 @@
       "confidence": 60,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.07399999999984175,
-        "totalMs": 0.07399999999984175
+        "rulesMs": 0.07809999999994943,
+        "totalMs": 0.07809999999994943
       }
     },
     {
@@ -284,8 +284,8 @@
       "confidence": 89,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.055000000000063665,
-        "totalMs": 0.055000000000063665
+        "rulesMs": 0.10519999999996799,
+        "totalMs": 0.10519999999996799
       }
     },
     {
@@ -296,8 +296,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.09039999999981774,
-        "totalMs": 0.09039999999981774
+        "rulesMs": 0.11269999999990432,
+        "totalMs": 0.11269999999990432
       }
     },
     {
@@ -308,8 +308,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.047700000000077125,
-        "totalMs": 0.047700000000077125
+        "rulesMs": 0.06550000000015643,
+        "totalMs": 0.06550000000015643
       }
     },
     {
@@ -320,8 +320,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.09939999999983229,
-        "totalMs": 0.09939999999983229
+        "rulesMs": 0.07450000000017099,
+        "totalMs": 0.07450000000017099
       }
     },
     {
@@ -332,8 +332,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.051099999999905776,
-        "totalMs": 0.051099999999905776
+        "rulesMs": 0.055899999999837746,
+        "totalMs": 0.055899999999837746
       }
     },
     {
@@ -344,8 +344,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.04189999999994143,
-        "totalMs": 0.04189999999994143
+        "rulesMs": 0.04559999999992215,
+        "totalMs": 0.04559999999992215
       }
     },
     {
@@ -356,8 +356,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.0419000000001688,
-        "totalMs": 0.0419000000001688
+        "rulesMs": 0.03670000000010987,
+        "totalMs": 0.03670000000010987
       }
     },
     {
@@ -368,8 +368,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.042799999999942884,
-        "totalMs": 0.042799999999942884
+        "rulesMs": 0.03710000000000946,
+        "totalMs": 0.03710000000000946
       }
     },
     {
@@ -380,8 +380,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.048199999999951615,
-        "totalMs": 0.048199999999951615
+        "rulesMs": 0.04090000000019245,
+        "totalMs": 0.04090000000019245
       }
     },
     {
@@ -392,8 +392,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.041999999999916326,
-        "totalMs": 0.041999999999916326
+        "rulesMs": 0.035399999999981446,
+        "totalMs": 0.035399999999981446
       }
     },
     {
@@ -404,8 +404,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.042699999999967986,
-        "totalMs": 0.042699999999967986
+        "rulesMs": 0.0364999999999327,
+        "totalMs": 0.0364999999999327
       }
     },
     {
@@ -416,8 +416,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.03939999999988686,
-        "totalMs": 0.03939999999988686
+        "rulesMs": 0.03389999999990323,
+        "totalMs": 0.03389999999990323
       }
     },
     {
@@ -428,8 +428,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.034799999999904685,
-        "totalMs": 0.034799999999904685
+        "rulesMs": 0.029999999999972715,
+        "totalMs": 0.029999999999972715
       }
     },
     {
@@ -440,8 +440,8 @@
       "confidence": 70,
       "decidedBy": "rules only",
       "timing": {
-        "rulesMs": 0.037900000000036016,
-        "totalMs": 0.037900000000036016
+        "rulesMs": 0.04250000000001819,
+        "totalMs": 0.04250000000001819
       }
     }
   ]

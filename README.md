@@ -192,7 +192,7 @@ instead of ~2.5.
 | Everything else (loading models, checking text, voice notes, the UI) | **No** |
 
 - The server listens only on `127.0.0.1`, so other devices can't reach it.
-- Uploaded voice notes are deleted right after they are transcribed.
+- Uploaded voice notes and screenshots are deleted right after they are read. See [PRIVACY.md](PRIVACY.md) for exactly what is and isn't stored.
 - **Verified 2026-11-02:** with Wi-Fi off, the AI loaded from the local cache
   and a check finished with "rules + AI agree" (test laptop below).
 
