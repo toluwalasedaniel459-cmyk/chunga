@@ -11,7 +11,9 @@
     "bench-whisper": "node scripts/bench-whisper.js",
     "start": "node src/server.js",
     "setup-models": "node scripts/setup-models.js",
-    "check-cpu": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-cpu.ps1"
+    "check-cpu": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-cpu.ps1",
+    "make-images": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-images.ps1",
+    "bench-ocr": "node scripts/bench-ocr.js"
   },
   "keywords": [],
   "author": "",

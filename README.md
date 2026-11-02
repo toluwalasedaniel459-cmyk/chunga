@@ -47,7 +47,7 @@ people with the least data and the least trust in cloud apps.
 | English / Swahili toggle (switches instantly, no re-check) | ✅ |
 | Instant answer from the rules, then the offline AI double-checks | ✅ |
 | Voice note upload (.ogg/.opus, .mp3, .m4a, .wav) + record from mic, transcribed offline with QVAC Whisper | ⚠️ Built; **needs a CPU with AVX2** (see [Known limitations](#known-limitations)) |
-| Screenshot of a fake M-PESA message | ⏳ Not started |
+| Screenshot of a message (.png / .jpg), read offline with QVAC OCR | ✅ Working; slow on old CPUs (7.5 min per screenshot on our test laptop) |
 | Read the verdict aloud (QVAC text-to-speech, Swahili) | ⏳ Not started |
 
 ## How it works
@@ -57,6 +57,8 @@ flowchart TD
     A[Pasted message] --> R
     V[Voice note .ogg / .mp3 / .m4a / .wav<br/>or mic recording] --> W[QVAC Whisper<br/>speech → text<br/>src/qvac/transcribe.js]
     W --> R
+    S[Screenshot .png / .jpg] --> O[QVAC OCR<br/>image → text<br/>src/qvac/ocr.js]
+    O --> R
     R[Rules<br/>12 red-flag patterns, EN / SW / Sheng<br/>src/detect/rules.js] -->|instant verdict| UI
     R --> L[QVAC LLM: Llama 3.2 1B<br/>JSON-schema output<br/>src/qvac/llm.js]
     L --> P[Safe JSON parsing + repair<br/>src/detect/parse.js]
@@ -129,6 +131,9 @@ work with the rules during that time.
 | `npm run eval` | Full eval on `data/test_messages.json` (rules + AI) |
 | `npm run eval -- --rules` | Same, rules only (instant) |
 | `npm run eval -- --audio` | Voice-note eval on `data/audio/` (needs `CHUNGA_AUDIO=on`) |
+| `npm run eval -- --images` | Screenshot eval on `data/images/` (add `--rules` to skip the AI) |
+| `npm run bench-ocr` | OCR speed test on one screenshot |
+| `npm run make-images` | Re-create the synthetic test screenshots (offline) |
 | `npm run check -- "message" [--sender "+2547…"] [--sw] [--rules]` | Check one message in the terminal |
 | `npm run bench` / `npm run bench-whisper` | Speed tests for the LLM / Whisper |
 | `npm run make-audio` | Re-create the synthetic test voice notes (Windows voices, offline) |
@@ -144,6 +149,7 @@ work with the rules during that time.
 |---|---|
 | [`src/qvac/llm.js`](src/qvac/llm.js) | Loads the LLM once; `completion()` with a JSON schema so the model can only answer in our format; streams tokens; timing stats |
 | [`src/qvac/transcribe.js`](src/qvac/transcribe.js) | Loads Whisper + Silero VAD once; `transcribe()` on uploaded files (QVAC decodes .ogg/.mp3/.m4a/.wav itself) |
+| [`src/qvac/ocr.js`](src/qvac/ocr.js) | Loads OCR on the first screenshot; `ocr()` on PNG/JPEG/BMP; smaller detection canvas for low-memory laptops; fixes "O7XX" → "07XX" |
 | [`scripts/setup-models.js`](scripts/setup-models.js) | `downloadAsset()` for every model, with retries |
 | [`scripts/smoke-test.js`](scripts/smoke-test.js) | Minimal `loadModel` + `completion` check |
 
@@ -155,6 +161,7 @@ work with the rules during that time.
 | Speech to text | `WHISPER_BASE_Q8_0` (Whisper base, multilingual, Q8_0) | 82 MB | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
 | Speech to text (optional, better Swahili) | `WHISPER_SMALL_Q8_0` | 264 MB | MIT |
 | Voice-activity detection | `VAD_SILERO_5_1_2` (Silero VAD 5.1.2) | 1 MB | [MIT](https://github.com/snakers4/silero-vad/blob/master/LICENSE) |
+| Screenshot text reading | `OCR_LATIN` (EasyOCR Latin recognizer) + CRAFT text detector, fetched automatically by QVAC | 15 MB + 83 MB | [Apache-2.0](https://github.com/JaidedAI/EasyOCR/blob/master/LICENSE) (EasyOCR; CRAFT weights are distributed with EasyOCR) |
 
 **Built with Llama.**
 
@@ -231,6 +238,19 @@ Sheng versions to record with a phone.
 |---|---|
 | Transcription time, word error rate, verdict accuracy | **Pending: needs a PC with AVX2** (`npm run eval -- --audio`) |
 | Rules on a perfect transcript of each clip | 5/5 correct (also 4/4 for the Swahili/Sheng scripts) |
+
+### Screenshots
+
+5 synthetic screenshots in [`data/images/`](data/images/) (fake reversal, fake
+prize, Swahili PIN request, real-looking M-PESA receipt, family message), drawn
+offline by `npm run make-images`.
+
+| | Result (test laptop) |
+|---|---|
+| One screenshot (fake reversal), `npm run bench-ocr` | OCR load 22.3 s, **read 453.6 s**, 13 text blocks, rules verdict **SCAM** |
+| What OCR got wrong | the transaction code (`SJK4H7XQ2P` → `SJKAHZXQZP`), `07XX` → `O7XX` (now fixed in code), one dropped "I" |
+| Rules on a perfect reading of each screenshot | 5/5 correct |
+| Full screenshot eval (`npm run eval -- --images`) | **Pending:** ~10 min per image on the test laptop |
 
 ## Known limitations
 

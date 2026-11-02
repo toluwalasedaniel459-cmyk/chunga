@@ -8,6 +8,9 @@ const UI = {
     offline: 'Works offline · nothing leaves this device',
     tabText: 'Paste message',
     tabVoice: 'Voice note',
+    tabImage: 'Screenshot',
+    imageBtn: 'Choose a screenshot',
+    imageHint: 'A picture of the message (.png or .jpg)',
     pasteLabel: 'Paste the SMS or WhatsApp message',
     pastePlaceholder: 'e.g. I have sent you Ksh 2,000 by mistake…',
     senderLabel: 'Who sent it? (optional)',
@@ -21,6 +24,8 @@ const UI = {
     stopBtn: 'Stop and check',
     transcriptTitle: 'What we heard',
     fromVoice: 'From voice note',
+    readTitle: 'What we read',
+    fromImage: 'From screenshot',
     aiChecking: 'The offline AI is double-checking…',
     whyTitle: 'Why',
     doTitle: 'What to do',
@@ -30,8 +35,9 @@ const UI = {
     aiLoading: 'Loading AI… You can already check messages with our quick rules.',
     aiError: 'The AI could not start. Quick rules still work.',
     checking: 'Checking…',
-    uploading: 'Sending the voice note…',
+    uploading: 'Sending…',
     transcribing: 'Listening to the voice note…',
+    readingImage: (s) => `Reading the screenshot… ${s}s`,
     aiWorking: (s) => `AI is reading the message… ${s}s`,
     emptyText: 'Please paste a message first.',
     micError: 'Could not use the microphone. Please choose a file instead.',
@@ -46,6 +52,9 @@ const UI = {
     offline: 'Inafanya kazi bila mtandao · hakuna kinachotoka kwenye kifaa',
     tabText: 'Bandika ujumbe',
     tabVoice: 'Ujumbe wa sauti',
+    tabImage: 'Picha ya skrini',
+    imageBtn: 'Chagua picha ya skrini',
+    imageHint: 'Picha ya ujumbe (.png au .jpg)',
     pasteLabel: 'Bandika ujumbe wa SMS au WhatsApp',
     pastePlaceholder: 'mf. Nimekutumia Ksh 2,000 kimakosa…',
     senderLabel: 'Nani ametuma? (si lazima)',
@@ -59,6 +68,8 @@ const UI = {
     stopBtn: 'Simamisha na ukague',
     transcriptTitle: 'Tulichosikia',
     fromVoice: 'Kutoka ujumbe wa sauti',
+    readTitle: 'Tulichosoma',
+    fromImage: 'Kutoka picha ya skrini',
     aiChecking: 'AI ya nje ya mtandao inakagua tena…',
     whyTitle: 'Kwa nini',
     doTitle: 'Ufanye nini',
@@ -68,8 +79,9 @@ const UI = {
     aiLoading: 'AI inapakia… Unaweza kukagua ujumbe kwa sheria zetu za haraka.',
     aiError: 'AI imeshindwa kuanza. Sheria za haraka bado zinafanya kazi.',
     checking: 'Inakagua…',
-    uploading: 'Inatuma ujumbe wa sauti…',
+    uploading: 'Inatuma…',
     transcribing: 'Inasikiliza ujumbe wa sauti…',
+    readingImage: (s) => `Inasoma picha ya skrini… sekunde ${s}`,
     aiWorking: (s) => `AI inasoma ujumbe… sekunde ${s}`,
     emptyText: 'Tafadhali bandika ujumbe kwanza.',
     micError: 'Imeshindwa kutumia maikrofoni. Tafadhali chagua faili.',
@@ -113,8 +125,7 @@ try { lang = localStorage.getItem('chunga-lang') || 'en' } catch { /* private mo
 // ---- Tabs -------------------------------------------------------------------
 document.querySelectorAll('.tabs button').forEach((tab) => tab.addEventListener('click', () => {
   document.querySelectorAll('.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b === tab)))
-  $('panel-text').hidden = tab.dataset.tab !== 'text'
-  $('panel-voice').hidden = tab.dataset.tab !== 'voice'
+  for (const name of ['text', 'voice', 'image']) $('panel-' + name).hidden = tab.dataset.tab !== name
 }))
 
 // ---- Model status ("Loading AI…") ------------------------------------------
@@ -141,10 +152,10 @@ function showProgress (text) {
   $('progress').hidden = false
   $('progress-text').textContent = text
 }
-function startAiTimer () {
+function startAiTimer (key = 'aiWorking') {
   const start = Date.now()
   clearInterval(timer)
-  timer = setInterval(() => showProgress(t('aiWorking', Math.round((Date.now() - start) / 1000))), 1000)
+  timer = setInterval(() => showProgress(t(key, Math.round((Date.now() - start) / 1000))), 1000)
 }
 function stopProgress () {
   clearInterval(timer)
@@ -155,7 +166,8 @@ function stopProgress () {
 function renderResult (both, source) {
   const r = both[lang]
   $('result').hidden = false
-  $('result-source').hidden = source !== 'voice'
+  $('result-source').hidden = source === 'text'
+  $('result-source').textContent = source === 'image' ? t('fromImage') : t('fromVoice')
   $('verdict').className = `verdict ${r.verdict}`
   $('verdict-label').textContent = r.label
   $('verdict-confidence').textContent = t('confidence', r.confidence)
@@ -213,7 +225,14 @@ async function readStream (response, source) {
 
 function handleEvent (ev, source) {
   if (ev.type === 'transcribing') showProgress(t('transcribing'))
+  if (ev.type === 'reading-image') startAiTimer('readingImage')
+  if (ev.type === 'ocr-text') {
+    $('transcript-box').hidden = false
+    $('transcript-title').textContent = t('readTitle')
+    $('transcript').textContent = ev.text || '—'
+  }
   if (ev.type === 'transcript') {
+    $('transcript-title').textContent = t('transcriptTitle')
     $('transcript-box').hidden = false
     $('transcript').textContent = ev.text || '—'
   }
@@ -288,6 +307,25 @@ $('audio-file').addEventListener('change', (e) => {
   const file = e.target.files[0]
   if (file) sendAudio(file, file.name)
   e.target.value = ''
+})
+
+// ---- Screenshot upload ------------------------------------------------------
+let previewUrl = null
+$('image-file').addEventListener('change', (e) => {
+  const file = e.target.files[0]
+  e.target.value = ''
+  if (!file) return
+  // Show the picture so the user knows which one is being checked.
+  if (previewUrl) URL.revokeObjectURL(previewUrl)
+  previewUrl = URL.createObjectURL(file)
+  $('image-preview').src = previewUrl
+  $('image-preview').hidden = false
+  showProgress(t('uploading'))
+  runCheck(() => fetch('/api/check-image', {
+    method: 'POST',
+    headers: { 'X-Filename': encodeURIComponent(file.name), 'Content-Type': 'application/octet-stream' },
+    body: file
+  }), 'image')
 })
 
 // ---- Microphone recording → 16 kHz mono WAV --------------------------------

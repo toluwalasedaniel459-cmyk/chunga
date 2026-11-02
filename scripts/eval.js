@@ -3,6 +3,7 @@
 //   npm run eval            rules + local AI (full app)
 //   npm run eval -- --rules rules only (instant, no model needed)
 //   npm run eval -- --audio voice-note clips in data/audio (see eval-audio.js)
+//   npm run eval -- --images screenshots in data/images (see eval-images.js)
 // Results are also saved to data/eval_results.json for the README.
 import { readFile, writeFile } from 'node:fs/promises'
 import { analyse } from '../src/detect/analyse.js'
@@ -10,6 +11,10 @@ import { initLlm, closeLlm } from '../src/qvac/llm.js'
 
 if (process.argv.includes('--audio')) {
   await import('./eval-audio.js')
+  process.exit(0)
+}
+if (process.argv.includes('--images')) {
+  await import('./eval-images.js')
   process.exit(0)
 }
 

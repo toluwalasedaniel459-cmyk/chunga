@@ -30,6 +30,7 @@
     <div class="tabs" role="tablist">
       <button type="button" role="tab" id="tab-text" aria-selected="true" data-tab="text" data-i18n="tabText">Paste message</button>
       <button type="button" role="tab" id="tab-voice" aria-selected="false" data-tab="voice" data-i18n="tabVoice">Voice note</button>
+      <button type="button" role="tab" id="tab-image" aria-selected="false" data-tab="image" data-i18n="tabImage">Screenshot</button>
     </div>
 
     <!-- Text input -->
@@ -56,6 +57,16 @@
       <p id="record-time" class="hint" aria-live="polite"></p>
     </section>
 
+    <!-- Screenshot input -->
+    <section id="panel-image" class="panel" role="tabpanel" aria-labelledby="tab-image" hidden>
+      <label class="big-btn file-btn">
+        <input id="image-file" type="file" accept=".png,.jpg,.jpeg,.bmp,image/png,image/jpeg,image/bmp">
+        <span data-i18n="imageBtn">Choose a screenshot</span>
+      </label>
+      <p class="hint" data-i18n="imageHint">A picture of the message (.png or .jpg)</p>
+      <img id="image-preview" class="preview" alt="" hidden>
+    </section>
+
     <!-- Progress -->
     <div id="progress" class="progress" role="status" aria-live="polite" hidden>
       <div class="spinner" aria-hidden="true"></div>
@@ -64,13 +75,13 @@
 
     <!-- Transcript of a voice note -->
     <section id="transcript-box" class="transcript" hidden>
-      <h2 data-i18n="transcriptTitle">What we heard</h2>
+      <h2 id="transcript-title">What we heard</h2>
       <p id="transcript"></p>
     </section>
 
     <!-- Result -->
     <section id="result" class="result" aria-live="polite" hidden>
-      <p id="result-source" class="source-tag" hidden data-i18n="fromVoice">From voice note</p>
+      <p id="result-source" class="source-tag" hidden></p>
       <div id="verdict" class="verdict">
         <span id="verdict-icon" class="verdict-icon" aria-hidden="true"></span>
         <div>

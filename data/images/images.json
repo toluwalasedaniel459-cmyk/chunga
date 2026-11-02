@@ -1,0 +1,51 @@
+{
+  "_note": "Synthetic test screenshots. Text written by the Chunga team; images drawn offline by scripts/make-images.ps1 to look like a phone's messages app. Names, codes and amounts are made up; phone numbers are masked with X.",
+  "images": [
+    {
+      "id": "img-scam-reversal",
+      "label": "SCAM",
+      "file": "img-scam-reversal.png",
+      "sender": "+254 7XX XXX 214",
+      "bubbles": [
+        "SJK4H7XQ2P Confirmed. You have received Ksh 3,500.00 from JOHN KAMAU 07XX XXX 214 on 12/10/26 at 3:41 PM. New M-PESA balance is Ksh 3,612.00.",
+        "Hello, I have sent you 3,500 by mistake. Please send it back to 07XX XXX 214. God bless you."
+      ]
+    },
+    {
+      "id": "img-scam-prize",
+      "label": "SCAM",
+      "file": "img-scam-prize.png",
+      "sender": "+254 7XX XXX 266",
+      "bubbles": [
+        "CONGRATULATIONS! You have won Ksh 50,000 in the Safaricom promotion. To receive your prize send Ksh 499 processing fee to 07XX XXX 266."
+      ]
+    },
+    {
+      "id": "img-scam-pin-sw",
+      "label": "SCAM",
+      "file": "img-scam-pin-sw.png",
+      "sender": "+254 7XX XXX 112",
+      "bubbles": [
+        "Habari mteja, naitwa Mary kutoka huduma kwa wateja wa Safaricom. Laini yako itafungwa leo. Nitumie namba yako ya siri ya M-PESA ili tuthibitishe akaunti."
+      ]
+    },
+    {
+      "id": "img-safe-receipt",
+      "label": "SAFE",
+      "file": "img-safe-receipt.png",
+      "sender": "MPESA",
+      "bubbles": [
+        "TJA7K2LM4Q Confirmed. You have received Ksh 1,200.00 from GRACE WANJIRU on 14/10/26 at 9:12 AM. New M-PESA balance is Ksh 4,830.50."
+      ]
+    },
+    {
+      "id": "img-safe-family",
+      "label": "SAFE",
+      "file": "img-safe-family.png",
+      "sender": "+254 7XX XXX 344",
+      "bubbles": [
+        "Mum, nimefika salama Nakuru. Nitakupigia jioni nikimaliza kazi. Usijali."
+      ]
+    }
+  ]
+}

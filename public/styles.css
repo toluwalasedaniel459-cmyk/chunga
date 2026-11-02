@@ -76,10 +76,10 @@ h1 { margin: 0; font-size: 1.5rem; letter-spacing: -0.01em; }
 .ai-status { margin: 8px 0; padding: 10px 12px; border-radius: 10px; background: var(--sus-bg); color: var(--ink); font-size: .9rem; }
 
 /* Tabs */
-.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0; }
 .tabs button {
-  min-height: 52px; border: 2px solid var(--line); border-radius: var(--radius); background: transparent;
-  font-weight: 700; cursor: pointer;
+  min-height: 56px; padding: 6px 4px; border: 2px solid var(--line); border-radius: var(--radius); background: transparent;
+  font-weight: 700; font-size: .85rem; line-height: 1.15; cursor: pointer;
 }
 .tabs button[aria-selected="true"] { border-color: var(--brand); background: var(--brand); color: var(--brand-ink); }
 
@@ -108,6 +108,7 @@ textarea { resize: vertical; min-height: 140px; }
 @keyframes pulse { 50% { opacity: .2; } }
 .hint { margin: 6px 0 0; font-size: .85rem; color: var(--muted); text-align: center; }
 .or { text-align: center; color: var(--muted); margin: 12px 0 0; font-weight: 600; }
+.preview { display: block; max-width: 100%; max-height: 260px; margin: 14px auto 0; border: 2px solid var(--line); border-radius: 10px; }
 .note { padding: 10px 12px; border-radius: 10px; background: var(--sus-bg); font-size: .9rem; }
 
 /* Progress */

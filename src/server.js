@@ -11,6 +11,9 @@
 //   POST /api/check-text   {text, sender}  → rules → ai-progress… → final
 //   POST /api/check-audio  (raw file body,
 //        header X-Filename)                → transcript → rules → ai-progress… → final
+//   POST /api/check-image  (raw file body,
+//        header X-Filename)                → ocr-text → rules → ai-progress… → final
+// OCR loads on the first screenshot (not at startup) to save memory on small laptops.
 import http from 'node:http'
 import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
 import { extname, join, resolve } from 'node:path'
@@ -18,6 +21,7 @@ import { randomUUID } from 'node:crypto'
 import { analyse } from './detect/analyse.js'
 import { initLlm } from './qvac/llm.js'
 import { initWhisper, transcribeFile, WHISPER_MODEL_NAME } from './qvac/transcribe.js'
+import { readImage } from './qvac/ocr.js'
 
 const PORT = Number(process.env.PORT || 3000)
 const ROOT = resolve(import.meta.dirname, '..')
@@ -30,9 +34,11 @@ const MAX_TEXT_CHARS = 2000
 // Audio types QVAC can decode itself (from its FORMATS_NEEDING_DECODE list).
 // WhatsApp ".opus" voice notes are Ogg files, so we save them as ".ogg".
 const AUDIO_EXT = { '.mp3': '.mp3', '.m4a': '.m4a', '.ogg': '.ogg', '.opus': '.ogg', '.oga': '.ogg', '.wav': '.wav', '.flac': '.flac', '.aac': '.aac' }
+// Image types QVAC OCR reads (PNG / JPEG / BMP, from the @qvac/ocr-ggml docs).
+const IMAGE_EXT = { '.png': '.png', '.jpg': '.jpg', '.jpeg': '.jpg', '.bmp': '.bmp' }
 
 // ---- Model status, shown in the UI ("Loading AI…") -------------------------
-const status = { llm: 'loading', audio: AUDIO_ENABLED ? 'loading' : 'off', whisperModel: WHISPER_MODEL_NAME }
+const status = { llm: 'loading', audio: AUDIO_ENABLED ? 'loading' : 'off', image: 'on-demand', whisperModel: WHISPER_MODEL_NAME }
 
 // The LLM runs one job at a time, so checks wait in line.
 let queue = Promise.resolve()
@@ -135,6 +141,38 @@ async function handleCheckAudio (req, res) {
   res.end()
 }
 
+async function handleCheckImage (req, res) {
+  const name = decodeURIComponent(String(req.headers['x-filename'] || 'screenshot.png'))
+  const ext = IMAGE_EXT[extname(name).toLowerCase()]
+  if (!ext) return sendJson(res, 415, { error: 'Please use a .png or .jpg screenshot.' })
+
+  const data = await readBody(req, MAX_UPLOAD_BYTES)
+  await mkdir(UPLOAD_DIR, { recursive: true })
+  const filePath = join(UPLOAD_DIR, `${randomUUID()}${ext}`)
+  await writeFile(filePath, data)
+
+  const send = startStream(res)
+  try {
+    await inQueue(async () => {
+      const start = performance.now()
+      send({ type: 'reading-image' })
+      const { text, ms: ocrMs } = await readImage(filePath)
+      status.image = 'ready'
+      send({ type: 'ocr-text', text })
+      if (!text) {
+        send({ type: 'error', error: 'No text was found in this picture.' })
+        return
+      }
+      const timing = await streamAnalysis(send, text, '', { source: 'image', timing: { ocrMs } })
+      const totalMs = Math.round(performance.now() - start)
+      console.log(`[check-image] ocr ${ocrMs}ms | analysis ${timing.totalMs}ms | total ${totalMs}ms`)
+    })
+  } finally {
+    await unlink(filePath).catch(() => {}) // never keep people's screenshots
+  }
+  res.end()
+}
+
 async function serveStatic (req, res) {
   const urlPath = new URL(req.url, 'http://localhost').pathname
   const file = resolve(PUBLIC_DIR, '.' + (urlPath === '/' ? '/index.html' : urlPath))
@@ -154,6 +192,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url === '/api/status') return sendJson(res, 200, status)
     if (req.method === 'POST' && req.url === '/api/check-text') return await handleCheckText(req, res)
     if (req.method === 'POST' && req.url === '/api/check-audio') return await handleCheckAudio(req, res)
+    if (req.method === 'POST' && req.url === '/api/check-image') return await handleCheckImage(req, res)
     if (req.method === 'GET') return await serveStatic(req, res)
     sendJson(res, 404, { error: 'Not found' })
   } catch (err) {
