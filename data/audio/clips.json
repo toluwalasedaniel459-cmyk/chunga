@@ -1,0 +1,40 @@
+{
+  "_note": "Synthetic test clips. Text written by the Chunga team; audio generated offline with the built-in Windows voices (scripts/make-audio.ps1). You can replace any .wav with your own recording of the same script – see RECORDING_SCRIPT.md.",
+  "clips": [
+    {
+      "id": "audio-scam-agent",
+      "label": "SCAM",
+      "file": "audio-scam-agent.wav",
+      "voice": "Microsoft David Desktop",
+      "script": "Hello, good afternoon. This is Peter from Safaricom customer care. Your M-PESA line will be blocked today because of a system update. Please tell me the code we have just sent to your phone so that we can verify your account."
+    },
+    {
+      "id": "audio-scam-reversal",
+      "label": "SCAM",
+      "file": "audio-scam-reversal.wav",
+      "voice": "Microsoft Zira Desktop",
+      "script": "Hello boss, sorry to disturb you. I have sent you three thousand five hundred shillings by mistake. It was for my mother's hospital bill. Tafadhali, please send it back to me quickly."
+    },
+    {
+      "id": "audio-scam-loan",
+      "label": "SCAM",
+      "file": "audio-scam-loan.wav",
+      "voice": "Microsoft Hazel Desktop",
+      "script": "Congratulations! You have qualified for an instant loan of twenty thousand shillings with no guarantor. To activate your loan today, pay a registration fee of three hundred shillings."
+    },
+    {
+      "id": "audio-safe-family",
+      "label": "SAFE",
+      "file": "audio-safe-family.wav",
+      "voice": "Microsoft Zira Desktop",
+      "script": "Hi mum, I have arrived safely in Nakuru. The journey was fine. I will call you in the evening after work. Usijali."
+    },
+    {
+      "id": "audio-safe-work",
+      "label": "SAFE",
+      "file": "audio-safe-work.wav",
+      "voice": "Microsoft David Desktop",
+      "script": "Hi Wanjiku, the staff meeting has moved to Thursday at ten in the morning. Please bring the October sales report. Thank you."
+    }
+  ]
+}

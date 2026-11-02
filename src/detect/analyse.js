@@ -44,21 +44,24 @@ export function buildResult (combined, lang = 'en') {
  * Analyse one message.
  * @param text     the message
  * @param options  sender (optional), lang 'en'|'sw', useLlm (default true),
- *                 onRules(result) – called instantly with the rules-only result,
+ *                 onRules(result, both) – called instantly with the rules-only result,
  *                 onToken(rawSoFar) – called while the AI streams
- * @returns        { result, rulesResult, timing, aiRaw }
+ * @returns        { result, both: { en, sw }, rulesResult, timing, aiRaw }
+ *                 `both` lets the UI switch language without asking the AI again.
  */
 export async function analyse (text, { sender = '', lang = 'en', useLlm = true, onRules, onToken } = {}) {
   const start = performance.now()
+  const inBoth = (combined) => ({ en: buildResult(combined, 'en'), sw: buildResult(combined, 'sw') })
 
   // 1. Rules first: instant, so the user sees something straight away.
   const rules = runRules(text, { sender })
-  const rulesResult = buildResult(combine(rules, null), lang)
+  const rulesBoth = inBoth(combine(rules, null))
+  const rulesResult = rulesBoth[lang]
   const rulesMs = performance.now() - start
-  onRules?.(rulesResult)
+  onRules?.(rulesResult, rulesBoth)
 
   if (!useLlm) {
-    return { result: rulesResult, rulesResult, timing: { rulesMs, totalMs: rulesMs }, aiRaw: null }
+    return { result: rulesResult, both: rulesBoth, rulesResult, timing: { rulesMs, totalMs: rulesMs }, aiRaw: null }
   }
 
   // 2. Local AI. Any failure (model error, unreadable JSON) falls back to the rules.
@@ -76,8 +79,9 @@ export async function analyse (text, { sender = '', lang = 'en', useLlm = true, 
   }
 
   // 3. Combine rules + AI.
-  const result = buildResult(combine(rules, ai), lang)
+  const both = inBoth(combine(rules, ai))
+  const result = both[lang]
   const timing = { rulesMs: Number(rulesMs.toFixed(2)), ...llmTiming, totalMs: Math.round(performance.now() - start) }
   console.log(`[timing] rules ${timing.rulesMs}ms | first token ${timing.firstTokenMs ?? '-'}ms | total ${timing.totalMs}ms | ${result.verdict} (${result.decidedBy})`)
-  return { result, rulesResult, timing, aiRaw }
+  return { result, both, rulesResult, timing, aiRaw }
 }

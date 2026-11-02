@@ -1,0 +1,357 @@
+// Chunga web app. Talks only to the local server on this computer.
+'use strict'
+
+// ---- Interface text in English and Swahili ---------------------------------
+const UI = {
+  en: {
+    tagline: 'Check a message before you trust it',
+    offline: 'Works offline · nothing leaves this device',
+    tabText: 'Paste message',
+    tabVoice: 'Voice note',
+    pasteLabel: 'Paste the SMS or WhatsApp message',
+    pastePlaceholder: 'e.g. I have sent you Ksh 2,000 by mistake…',
+    senderLabel: 'Who sent it? (optional)',
+    senderPlaceholder: 'e.g. MPESA or 0712…',
+    checkBtn: 'Check message',
+    voiceOff: 'Voice notes are turned off on this computer.',
+    uploadBtn: 'Choose a voice note',
+    uploadHint: 'WhatsApp voice notes (.ogg / .opus), .mp3, .m4a or .wav',
+    or: 'or',
+    recordBtn: 'Record from microphone',
+    stopBtn: 'Stop and check',
+    transcriptTitle: 'What we heard',
+    fromVoice: 'From voice note',
+    aiChecking: 'The offline AI is double-checking…',
+    whyTitle: 'Why',
+    doTitle: 'What to do',
+    againBtn: 'Check another message',
+    footer: "Chunga gives advice, not a guarantee. When in doubt, don't send money.",
+    confidence: (n) => `Confidence: ${n}%`,
+    aiLoading: 'Loading AI… You can already check messages with our quick rules.',
+    aiError: 'The AI could not start. Quick rules still work.',
+    checking: 'Checking…',
+    uploading: 'Sending the voice note…',
+    transcribing: 'Listening to the voice note…',
+    aiWorking: (s) => `AI is reading the message… ${s}s`,
+    emptyText: 'Please paste a message first.',
+    micError: 'Could not use the microphone. Please choose a file instead.',
+    recording: (s) => `Recording… ${s}s`,
+    tagRule: 'rule',
+    tagAi: 'AI',
+    decidedBy: (d) => `Decided by: ${d}`,
+    errorGeneric: 'Something went wrong. Please try again.'
+  },
+  sw: {
+    tagline: 'Kagua ujumbe kabla ya kuuamini',
+    offline: 'Inafanya kazi bila mtandao · hakuna kinachotoka kwenye kifaa',
+    tabText: 'Bandika ujumbe',
+    tabVoice: 'Ujumbe wa sauti',
+    pasteLabel: 'Bandika ujumbe wa SMS au WhatsApp',
+    pastePlaceholder: 'mf. Nimekutumia Ksh 2,000 kimakosa…',
+    senderLabel: 'Nani ametuma? (si lazima)',
+    senderPlaceholder: 'mf. MPESA au 0712…',
+    checkBtn: 'Kagua ujumbe',
+    voiceOff: 'Ujumbe wa sauti umezimwa kwenye kompyuta hii.',
+    uploadBtn: 'Chagua ujumbe wa sauti',
+    uploadHint: 'Sauti za WhatsApp (.ogg / .opus), .mp3, .m4a au .wav',
+    or: 'au',
+    recordBtn: 'Rekodi kwa maikrofoni',
+    stopBtn: 'Simamisha na ukague',
+    transcriptTitle: 'Tulichosikia',
+    fromVoice: 'Kutoka ujumbe wa sauti',
+    aiChecking: 'AI ya nje ya mtandao inakagua tena…',
+    whyTitle: 'Kwa nini',
+    doTitle: 'Ufanye nini',
+    againBtn: 'Kagua ujumbe mwingine',
+    footer: 'Chunga inatoa ushauri, si uhakika. Ukiwa na shaka, usitume pesa.',
+    confidence: (n) => `Uhakika: ${n}%`,
+    aiLoading: 'AI inapakia… Unaweza kukagua ujumbe kwa sheria zetu za haraka.',
+    aiError: 'AI imeshindwa kuanza. Sheria za haraka bado zinafanya kazi.',
+    checking: 'Inakagua…',
+    uploading: 'Inatuma ujumbe wa sauti…',
+    transcribing: 'Inasikiliza ujumbe wa sauti…',
+    aiWorking: (s) => `AI inasoma ujumbe… sekunde ${s}`,
+    emptyText: 'Tafadhali bandika ujumbe kwanza.',
+    micError: 'Imeshindwa kutumia maikrofoni. Tafadhali chagua faili.',
+    recording: (s) => `Inarekodi… sekunde ${s}`,
+    tagRule: 'sheria',
+    tagAi: 'AI',
+    decidedBy: (d) => `Imeamuliwa na: ${d}`,
+    errorGeneric: 'Kuna tatizo. Tafadhali jaribu tena.'
+  }
+}
+
+const $ = (id) => document.getElementById(id)
+let lang = 'en'
+let lastResult = null // { en, sw } – kept so the language toggle can redraw instantly
+let lastSource = 'text'
+let aiPending = false
+let busy = false
+
+const t = (key, ...args) => {
+  const v = UI[lang][key]
+  return typeof v === 'function' ? v(...args) : v
+}
+
+// ---- Language ---------------------------------------------------------------
+function applyLanguage () {
+  document.documentElement.lang = lang
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n) })
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder) })
+  document.querySelectorAll('.lang button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)))
+  if (recorder) $('record-label').textContent = t('stopBtn')
+  renderStatus()
+  if (lastResult) renderResult(lastResult, lastSource)
+}
+document.querySelectorAll('.lang button').forEach((b) => b.addEventListener('click', () => {
+  lang = b.dataset.lang
+  try { localStorage.setItem('chunga-lang', lang) } catch { /* private mode */ }
+  applyLanguage()
+}))
+try { lang = localStorage.getItem('chunga-lang') || 'en' } catch { /* private mode */ }
+
+// ---- Tabs -------------------------------------------------------------------
+document.querySelectorAll('.tabs button').forEach((tab) => tab.addEventListener('click', () => {
+  document.querySelectorAll('.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b === tab)))
+  $('panel-text').hidden = tab.dataset.tab !== 'text'
+  $('panel-voice').hidden = tab.dataset.tab !== 'voice'
+}))
+
+// ---- Model status ("Loading AI…") ------------------------------------------
+let status = { llm: 'loading', audio: 'off' }
+function renderStatus () {
+  const box = $('ai-status')
+  if (status.llm === 'loading') { box.hidden = false; box.textContent = t('aiLoading') } else if (status.llm === 'error') { box.hidden = false; box.textContent = t('aiError') } else box.hidden = true
+  const voiceOn = status.audio === 'ready'
+  $('voice-off').hidden = voiceOn
+  $('audio-file').disabled = !voiceOn
+  $('record').disabled = !voiceOn || busy
+}
+async function pollStatus () {
+  try {
+    status = await (await fetch('/api/status')).json()
+    renderStatus()
+  } catch { /* server restarting */ }
+  if (status.llm === 'loading' || status.audio === 'loading') setTimeout(pollStatus, 3000)
+}
+
+// ---- Progress ---------------------------------------------------------------
+let timer = null
+function showProgress (text) {
+  $('progress').hidden = false
+  $('progress-text').textContent = text
+}
+function startAiTimer () {
+  const start = Date.now()
+  clearInterval(timer)
+  timer = setInterval(() => showProgress(t('aiWorking', Math.round((Date.now() - start) / 1000))), 1000)
+}
+function stopProgress () {
+  clearInterval(timer)
+  $('progress').hidden = true
+}
+
+// ---- Result -----------------------------------------------------------------
+function renderResult (both, source) {
+  const r = both[lang]
+  $('result').hidden = false
+  $('result-source').hidden = source !== 'voice'
+  $('verdict').className = `verdict ${r.verdict}`
+  $('verdict-label').textContent = r.label
+  $('verdict-confidence').textContent = t('confidence', r.confidence)
+  $('ai-pending').hidden = !aiPending
+
+  $('reasons').replaceChildren(...r.reasons.map((reason) => {
+    const li = document.createElement('li')
+    li.textContent = reason.text
+    const tag = document.createElement('span')
+    tag.className = 'tag'
+    tag.textContent = reason.source === 'ai' ? t('tagAi') : t('tagRule')
+    li.append(tag)
+    return li
+  }))
+  $('summary').hidden = !r.summary
+  $('summary').textContent = r.summary || ''
+  $('advice').replaceChildren(...r.advice.map((a) => Object.assign(document.createElement('li'), { textContent: a })))
+  $('decided-by').textContent = t('decidedBy', r.decidedBy)
+}
+
+function resetResult () {
+  lastResult = null
+  aiPending = false
+  $('result').hidden = true
+  $('transcript-box').hidden = true
+}
+
+function setBusy (value) {
+  busy = value
+  $('check-text').disabled = value
+  renderStatus()
+}
+
+// Reads the server's stream of JSON lines and updates the screen for each event.
+async function readStream (response, source) {
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}))
+    throw new Error(err.error || t('errorGeneric'))
+  }
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    let nl
+    while ((nl = buffer.indexOf('\n')) >= 0) {
+      const line = buffer.slice(0, nl).trim()
+      buffer = buffer.slice(nl + 1)
+      if (line) handleEvent(JSON.parse(line), source)
+    }
+  }
+}
+
+function handleEvent (ev, source) {
+  if (ev.type === 'transcribing') showProgress(t('transcribing'))
+  if (ev.type === 'transcript') {
+    $('transcript-box').hidden = false
+    $('transcript').textContent = ev.text || '—'
+  }
+  if (ev.type === 'rules') {
+    // Instant answer from the rules; the AI may still be working.
+    aiPending = ev.aiPending
+    lastResult = ev.result
+    lastSource = source
+    renderResult(ev.result, source)
+    if (aiPending) startAiTimer(); else stopProgress()
+  }
+  if (ev.type === 'final') {
+    aiPending = false
+    lastResult = ev.result
+    lastSource = ev.source || source
+    stopProgress()
+    renderResult(ev.result, lastSource)
+  }
+  if (ev.type === 'error') throw new Error(ev.error)
+}
+
+async function runCheck (makeRequest, source) {
+  resetResult()
+  setBusy(true)
+  try {
+    await readStream(await makeRequest(), source)
+  } catch (err) {
+    stopProgress()
+    alertBox(err.message)
+  } finally {
+    aiPending = false
+    if (lastResult) renderResult(lastResult, lastSource)
+    setBusy(false)
+  }
+}
+
+function alertBox (message) {
+  const box = $('ai-status')
+  box.hidden = false
+  box.textContent = message
+}
+
+// ---- Text check -------------------------------------------------------------
+$('check-text').addEventListener('click', () => {
+  const text = $('message').value.trim()
+  if (!text) return alertBox(t('emptyText'))
+  showProgress(t('checking'))
+  runCheck(() => fetch('/api/check-text', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, sender: $('sender').value.trim() })
+  }), 'text')
+})
+
+$('again').addEventListener('click', () => {
+  resetResult()
+  $('message').value = ''
+  $('sender').value = ''
+  $('message').focus()
+})
+
+// ---- Voice note upload ------------------------------------------------------
+function sendAudio (blob, filename) {
+  showProgress(t('uploading'))
+  runCheck(() => fetch('/api/check-audio', {
+    method: 'POST',
+    headers: { 'X-Filename': encodeURIComponent(filename), 'Content-Type': 'application/octet-stream' },
+    body: blob
+  }), 'voice')
+}
+$('audio-file').addEventListener('change', (e) => {
+  const file = e.target.files[0]
+  if (file) sendAudio(file, file.name)
+  e.target.value = ''
+})
+
+// ---- Microphone recording → 16 kHz mono WAV --------------------------------
+// Browsers record WebM, which QVAC doesn't read, so we capture raw samples and
+// build a WAV file ourselves.
+let recorder = null
+$('record').addEventListener('click', async () => {
+  if (recorder) return stopRecording()
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1 } })
+    const ctx = new AudioContext()
+    const source = ctx.createMediaStreamSource(stream)
+    const node = ctx.createScriptProcessor(4096, 1, 1)
+    const chunks = []
+    node.onaudioprocess = (e) => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)))
+    source.connect(node)
+    node.connect(ctx.destination)
+    const started = Date.now()
+    const tick = setInterval(() => { $('record-time').textContent = t('recording', Math.round((Date.now() - started) / 1000)) }, 500)
+    recorder = { stream, ctx, node, chunks, tick }
+    $('record').classList.add('recording')
+    $('record-label').textContent = t('stopBtn')
+  } catch {
+    alertBox(t('micError'))
+  }
+})
+
+function stopRecording () {
+  const { stream, ctx, node, chunks, tick } = recorder
+  recorder = null
+  clearInterval(tick)
+  node.disconnect()
+  stream.getTracks().forEach((tr) => tr.stop())
+  const wav = encodeWav(chunks, ctx.sampleRate, 16000)
+  ctx.close()
+  $('record').classList.remove('recording')
+  $('record-label').textContent = t('recordBtn')
+  $('record-time').textContent = ''
+  sendAudio(wav, 'recording.wav')
+}
+
+// Joins the recorded chunks, resamples to 16 kHz and writes a 16-bit PCM WAV.
+function encodeWav (chunks, inRate, outRate) {
+  const total = chunks.reduce((n, c) => n + c.length, 0)
+  const input = new Float32Array(total)
+  let offset = 0
+  for (const c of chunks) { input.set(c, offset); offset += c.length }
+  const ratio = inRate / outRate
+  const out = new Int16Array(Math.floor(total / ratio))
+  for (let i = 0; i < out.length; i++) {
+    const s = Math.max(-1, Math.min(1, input[Math.floor(i * ratio)]))
+    out[i] = s < 0 ? s * 0x8000 : s * 0x7fff
+  }
+  const buffer = new ArrayBuffer(44 + out.length * 2)
+  const v = new DataView(buffer)
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)) }
+  str(0, 'RIFF'); v.setUint32(4, 36 + out.length * 2, true); str(8, 'WAVE')
+  str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true)
+  v.setUint32(24, outRate, true); v.setUint32(28, outRate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true)
+  str(36, 'data'); v.setUint32(40, out.length * 2, true)
+  new Int16Array(buffer, 44).set(out)
+  return new Blob([buffer], { type: 'audio/wav' })
+}
+
+// ---- Start ------------------------------------------------------------------
+applyLanguage()
+pollStatus()

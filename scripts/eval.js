@@ -2,10 +2,16 @@
 // accuracy and response times.
 //   npm run eval            rules + local AI (full app)
 //   npm run eval -- --rules rules only (instant, no model needed)
+//   npm run eval -- --audio voice-note clips in data/audio (see eval-audio.js)
 // Results are also saved to data/eval_results.json for the README.
 import { readFile, writeFile } from 'node:fs/promises'
 import { analyse } from '../src/detect/analyse.js'
 import { initLlm, closeLlm } from '../src/qvac/llm.js'
+
+if (process.argv.includes('--audio')) {
+  await import('./eval-audio.js')
+  process.exit(0)
+}
 
 const useLlm = !process.argv.includes('--rules')
 let { messages } = JSON.parse(await readFile(new URL('../data/test_messages.json', import.meta.url), 'utf8'))

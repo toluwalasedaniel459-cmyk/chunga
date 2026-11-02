@@ -6,7 +6,11 @@
     "smoke": "node scripts/smoke-test.js",
     "eval": "node scripts/eval.js",
     "check": "node scripts/check.js",
-    "bench": "node scripts/bench-llm.js"
+    "bench": "node scripts/bench-llm.js",
+    "make-audio": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-audio.ps1",
+    "bench-whisper": "node scripts/bench-whisper.js",
+    "start": "node src/server.js",
+    "setup-models": "node scripts/setup-models.js"
   },
   "keywords": [],
   "author": "",

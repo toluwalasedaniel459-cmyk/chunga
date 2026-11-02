@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chunga</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="phone">
+    <header class="top">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">!</span>
+        <div>
+          <h1>Chunga</h1>
+          <p class="tagline" data-i18n="tagline">Check a message before you trust it</p>
+        </div>
+      </div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="sw" aria-pressed="false">SW</button>
+      </div>
+    </header>
+
+    <p class="offline-badge"><span aria-hidden="true">●</span> <span data-i18n="offline">Works offline · nothing leaves this device</span></p>
+
+    <div id="ai-status" class="ai-status" role="status" hidden></div>
+
+    <!-- Input choice -->
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tab-text" aria-selected="true" data-tab="text" data-i18n="tabText">Paste message</button>
+      <button type="button" role="tab" id="tab-voice" aria-selected="false" data-tab="voice" data-i18n="tabVoice">Voice note</button>
+    </div>
+
+    <!-- Text input -->
+    <section id="panel-text" class="panel" role="tabpanel" aria-labelledby="tab-text">
+      <label for="message" class="label" data-i18n="pasteLabel">Paste the SMS or WhatsApp message</label>
+      <textarea id="message" rows="6" maxlength="2000" data-i18n-placeholder="pastePlaceholder" placeholder="e.g. I have sent you Ksh 2,000 by mistake…"></textarea>
+      <label for="sender" class="label small" data-i18n="senderLabel">Who sent it? (optional)</label>
+      <input id="sender" type="text" maxlength="40" data-i18n-placeholder="senderPlaceholder" placeholder="e.g. MPESA or 0712…">
+      <button type="button" id="check-text" class="big-btn" data-i18n="checkBtn">Check message</button>
+    </section>
+
+    <!-- Voice input -->
+    <section id="panel-voice" class="panel" role="tabpanel" aria-labelledby="tab-voice" hidden>
+      <p id="voice-off" class="note" hidden data-i18n="voiceOff">Voice notes are turned off on this computer.</p>
+      <label class="big-btn file-btn">
+        <input id="audio-file" type="file" accept=".ogg,.opus,.oga,.mp3,.m4a,.wav,.aac,.flac,audio/*">
+        <span data-i18n="uploadBtn">Choose a voice note</span>
+      </label>
+      <p class="hint" data-i18n="uploadHint">WhatsApp voice notes (.ogg / .opus), .mp3, .m4a or .wav</p>
+      <div class="or" data-i18n="or">or</div>
+      <button type="button" id="record" class="big-btn record-btn">
+        <span class="dot" aria-hidden="true"></span><span id="record-label" data-i18n="recordBtn">Record from microphone</span>
+      </button>
+      <p id="record-time" class="hint" aria-live="polite"></p>
+    </section>
+
+    <!-- Progress -->
+    <div id="progress" class="progress" role="status" aria-live="polite" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <span id="progress-text"></span>
+    </div>
+
+    <!-- Transcript of a voice note -->
+    <section id="transcript-box" class="transcript" hidden>
+      <h2 data-i18n="transcriptTitle">What we heard</h2>
+      <p id="transcript"></p>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="result" aria-live="polite" hidden>
+      <p id="result-source" class="source-tag" hidden data-i18n="fromVoice">From voice note</p>
+      <div id="verdict" class="verdict">
+        <span id="verdict-icon" class="verdict-icon" aria-hidden="true"></span>
+        <div>
+          <div id="verdict-label" class="verdict-label"></div>
+          <div id="verdict-confidence" class="confidence"></div>
+        </div>
+      </div>
+      <p id="ai-pending" class="ai-pending" hidden><span class="spinner small" aria-hidden="true"></span> <span data-i18n="aiChecking">The offline AI is double-checking…</span></p>
+      <h2 data-i18n="whyTitle">Why</h2>
+      <ul id="reasons" class="reasons"></ul>
+      <p id="summary" class="summary" hidden></p>
+      <h2 data-i18n="doTitle">What to do</h2>
+      <ol id="advice" class="advice"></ol>
+      <p id="decided-by" class="decided-by"></p>
+      <button type="button" id="again" class="big-btn secondary" data-i18n="againBtn">Check another message</button>
+    </section>
+
+    <footer class="foot" data-i18n="footer">Chunga gives advice, not a guarantee. When in doubt, don't send money.</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
