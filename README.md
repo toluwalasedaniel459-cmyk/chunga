@@ -84,7 +84,9 @@ floor (`src/combine.js`):
 Explanations and advice are hand-written in English and Swahili for every
 reason code (`src/detect/messages.js`), so they are clear and correct even
 though the model is small. The AI adds a one-line summary and can add red flags
-the rules don't know.
+the rules don't know. Those are in English only: in Swahili mode the summary is
+hidden and AI flags are shown as one hand-written Swahili sentence, because the
+1B model's Swahili was often wrong in our tests.
 
 ## Setup
 
