@@ -2,6 +2,17 @@
 'use strict'
 
 // ---- Interface text in English and Swahili ---------------------------------
+// The server explains who decided the verdict in English; these are the Swahili versions.
+const DECIDED_BY_SW = {
+  'rules only': 'kanuni pekee',
+  'rules + AI agree': 'kanuni na AI zinakubaliana',
+  'strong rule overrides AI': 'kanuni kali imeshinda AI',
+  'AI, boosted by rules': 'AI, ikisaidiwa na kanuni',
+  'rules raised AI verdict': 'kanuni zimepandisha uamuzi wa AI',
+  AI: 'AI',
+  'AI only (capped at SUSPICIOUS)': "AI pekee (haiwezi kusema 'utapeli' yenyewe)"
+}
+
 const UI = {
   en: {
     tagline: 'Check a message before you trust it',
@@ -52,7 +63,7 @@ const UI = {
   },
   sw: {
     tagline: 'Kagua ujumbe kabla ya kuuamini',
-    offline: 'Inafanya kazi bila mtandao · hakuna kinachotoka kwenye kifaa',
+    offline: 'Inafanya kazi bila mtandao · hakuna kinachotoka kwenye kifaa hiki',
     tabText: 'Bandika ujumbe',
     tabVoice: 'Ujumbe wa sauti',
     tabImage: 'Picha ya skrini',
@@ -73,7 +84,7 @@ const UI = {
     fromVoice: 'Kutoka ujumbe wa sauti',
     readTitle: 'Tulichosoma',
     fromImage: 'Kutoka picha ya skrini',
-    aiChecking: 'AI ya nje ya mtandao inakagua tena…',
+    aiChecking: 'AI iliyo kwenye kifaa hiki inakagua tena…',
     whyTitle: 'Kwa nini',
     doTitle: 'Ufanye nini',
     againBtn: 'Kagua ujumbe mwingine',
@@ -82,8 +93,8 @@ const UI = {
     speakError: 'Imeshindwa kusoma kwa sauti. Tafadhali jaribu tena.',
     footer: 'Chunga inatoa ushauri, si uhakika. Ukiwa na shaka, usitume pesa.',
     confidence: (n) => `Uhakika: ${n}%`,
-    aiLoading: 'AI inapakia… Unaweza kukagua ujumbe kwa sheria zetu za haraka.',
-    aiError: 'AI imeshindwa kuanza. Sheria za haraka bado zinafanya kazi.',
+    aiLoading: 'AI inapakia… Unaweza tayari kukagua ujumbe kwa ukaguzi wetu wa haraka.',
+    aiError: 'AI imeshindwa kuanza. Ukaguzi wa haraka bado unafanya kazi.',
     checking: 'Inakagua…',
     uploading: 'Inatuma…',
     transcribing: 'Inasikiliza ujumbe wa sauti…',
@@ -92,9 +103,9 @@ const UI = {
     emptyText: 'Tafadhali bandika ujumbe kwanza.',
     micError: 'Imeshindwa kutumia maikrofoni. Tafadhali chagua faili.',
     recording: (s) => `Inarekodi… sekunde ${s}`,
-    tagRule: 'sheria',
+    tagRule: 'kanuni',
     tagAi: 'AI',
-    decidedBy: (d) => `Imeamuliwa na: ${d}`,
+    decidedBy: (d) => `Imeamuliwa na: ${DECIDED_BY_SW[d] || d}`,
     errorGeneric: 'Kuna tatizo. Tafadhali jaribu tena.'
   }
 }
