@@ -48,7 +48,7 @@ people with the least data and the least trust in cloud apps.
 | Instant answer from the rules, then the offline AI double-checks | ✅ |
 | Voice note upload (.ogg/.opus, .mp3, .m4a, .wav) + record from mic, transcribed offline with QVAC Whisper | ⚠️ Built; **needs a CPU with AVX2** (see [Known limitations](#known-limitations)) |
 | Screenshot of a message (.png / .jpg), read offline with QVAC OCR | ✅ Working; slow on old CPUs (7.5 min per screenshot on our test laptop) |
-| Read the verdict aloud (QVAC text-to-speech, Swahili) | ⏳ Not started |
+| Read the verdict aloud in Swahili or English (QVAC text-to-speech, Chatterbox multilingual), with every sentence cached after first use | ⚠️ Built; **needs a CPU with AVX2** (see [Known limitations](#known-limitations)) |
 
 ## How it works
 
@@ -103,8 +103,9 @@ npm run check-cpu        # tells you if voice notes will work on this PC
 ### Download the models (once, while online)
 
 ```powershell
-npm run setup-models     # LLM + Whisper base + VAD, about 860 MB
-                         # add -- --all to also get Whisper small (better Swahili)
+npm run setup-models     # LLM + Whisper base + VAD + OCR, about 960 MB
+                         # -- --voice  adds the read-aloud models (~1.1 GB)
+                         # -- --all    adds those plus Whisper small (better Swahili)
 ```
 
 Models are stored in QVAC's cache (`~/.qvac/models`), not in this repo.
@@ -119,6 +120,13 @@ For voice notes on a PC with AVX2:
 
 ```powershell
 $env:CHUNGA_AUDIO="on"; npm start
+```
+
+To read results aloud (also needs AVX2, and `setup-models -- --voice`):
+
+```powershell
+npm run prepare-voice    # once: generates all spoken sentences with QVAC
+$env:CHUNGA_AUDIO="on"; $env:CHUNGA_TTS="on"; npm start
 ```
 
 The first start shows "Loading AI…" while the model loads. Text checks already
@@ -150,6 +158,8 @@ work with the rules during that time.
 | [`src/qvac/llm.js`](src/qvac/llm.js) | Loads the LLM once; `completion()` with a JSON schema so the model can only answer in our format; streams tokens; timing stats |
 | [`src/qvac/transcribe.js`](src/qvac/transcribe.js) | Loads Whisper + Silero VAD once; `transcribe()` on uploaded files (QVAC decodes .ogg/.mp3/.m4a/.wav itself) |
 | [`src/qvac/ocr.js`](src/qvac/ocr.js) | Loads OCR on the first screenshot; `ocr()` on PNG/JPEG/BMP; smaller detection canvas for low-memory laptops; fixes "O7XX" → "07XX" |
+| [`src/qvac/tts.js`](src/qvac/tts.js) | Chatterbox multilingual (`language: sw` / `en`); `textToSpeech()` → WAV; caches each fixed sentence in `tts-cache/` |
+| [`scripts/prepare-voice.js`](scripts/prepare-voice.js) | Pre-generates all 23 spoken sentences per language before a demo |
 | [`scripts/setup-models.js`](scripts/setup-models.js) | `downloadAsset()` for every model, with retries |
 | [`scripts/smoke-test.js`](scripts/smoke-test.js) | Minimal `loadModel` + `completion` check |
 
@@ -161,6 +171,7 @@ work with the rules during that time.
 | Speech to text | `WHISPER_BASE_Q8_0` (Whisper base, multilingual, Q8_0) | 82 MB | [MIT](https://github.com/openai/whisper/blob/main/LICENSE) |
 | Speech to text (optional, better Swahili) | `WHISPER_SMALL_Q8_0` | 264 MB | MIT |
 | Voice-activity detection | `VAD_SILERO_5_1_2` (Silero VAD 5.1.2) | 1 MB | [MIT](https://github.com/snakers4/silero-vad/blob/master/LICENSE) |
+| Read aloud (optional, `--voice`) | `TTS_T3_MULTILINGUAL_CHATTERBOX_Q4_0` + `TTS_S3GEN_MULTILINGUAL_CHATTERBOX_Q4_0` (Chatterbox multilingual, 23 languages incl. Swahili) | 345 MB + 788 MB | [MIT](https://github.com/resemble-ai/chatterbox/blob/master/LICENSE) |
 | Screenshot text reading | `OCR_LATIN` (EasyOCR Latin recognizer) + CRAFT text detector, fetched automatically by QVAC | 15 MB + 83 MB | [Apache-2.0](https://github.com/JaidedAI/EasyOCR/blob/master/LICENSE) (EasyOCR; CRAFT weights are distributed with EasyOCR) |
 
 **Built with Llama.**
@@ -261,6 +272,12 @@ offline by `npm run make-images`.
   engine ships one build. That's why voice notes are off unless
   `CHUNGA_AUDIO=on`: a crash would also stop the LLM. `npm run check-cpu`
   tells you which case you're in.
+- **Reading aloud needs AVX2 too.** QVAC's text-to-speech engine
+  (`@qvac/tts-ggml-win32-x64`) also ships a single build, and its worker died
+  every time it loaded a model on our test laptop (we tested the smallest one,
+  Supertonic 3, 85 MB). It is off unless `CHUNGA_TTS=on`. Only our fixed,
+  hand-written sentences are spoken (never the AI's free text), so each one is
+  generated once and cached.
 - **Slow on old CPUs:** about 2.5 minutes per AI check on the test laptop
   (longer when RAM is short). The rules answer instantly.
 - **Small model:** Llama 3.2 1B can misjudge normal messages, which is why

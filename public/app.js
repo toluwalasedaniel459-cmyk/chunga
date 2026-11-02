@@ -30,6 +30,9 @@ const UI = {
     whyTitle: 'Why',
     doTitle: 'What to do',
     againBtn: 'Check another message',
+    speakBtn: 'Read aloud',
+    speakWorking: (s) => `Preparing the voice… ${s}s`,
+    speakError: 'Could not read aloud. Please try again.',
     footer: "Chunga gives advice, not a guarantee. When in doubt, don't send money.",
     confidence: (n) => `Confidence: ${n}%`,
     aiLoading: 'Loading AI… You can already check messages with our quick rules.',
@@ -74,6 +77,9 @@ const UI = {
     whyTitle: 'Kwa nini',
     doTitle: 'Ufanye nini',
     againBtn: 'Kagua ujumbe mwingine',
+    speakBtn: 'Soma kwa sauti',
+    speakWorking: (s) => `Inaandaa sauti… sekunde ${s}`,
+    speakError: 'Imeshindwa kusoma kwa sauti. Tafadhali jaribu tena.',
     footer: 'Chunga inatoa ushauri, si uhakika. Ukiwa na shaka, usitume pesa.',
     confidence: (n) => `Uhakika: ${n}%`,
     aiLoading: 'AI inapakia… Unaweza kukagua ujumbe kwa sheria zetu za haraka.',
@@ -186,6 +192,7 @@ function renderResult (both, source) {
   $('summary').textContent = r.summary || ''
   $('advice').replaceChildren(...r.advice.map((a) => Object.assign(document.createElement('li'), { textContent: a })))
   $('decided-by').textContent = t('decidedBy', r.decidedBy)
+  $('speak').hidden = status.tts === 'off' || status.tts === undefined
 }
 
 function resetResult () {
@@ -389,6 +396,35 @@ function encodeWav (chunks, inRate, outRate) {
   new Int16Array(buffer, 44).set(out)
   return new Blob([buffer], { type: 'audio/wav' })
 }
+
+// ---- Read the result aloud (QVAC text-to-speech on the server) -----------
+$('speak').addEventListener('click', async () => {
+  if (!lastResult || busy) return
+  const r = lastResult[lang]
+  setBusy(true)
+  $('speak').disabled = true
+  startAiTimer('speakWorking')
+  try {
+    const res = await fetch('/api/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // Only reason codes are sent; the server speaks its own fixed EN/SW text.
+      body: JSON.stringify({ lang, verdict: r.verdict, reasonCodes: r.reasons.filter((x) => x.code).map((x) => x.code) })
+    })
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || t('speakError'))
+    const audio = $('speak-audio')
+    if (audio.src) URL.revokeObjectURL(audio.src)
+    audio.src = URL.createObjectURL(await res.blob())
+    stopProgress()
+    await audio.play()
+  } catch (err) {
+    stopProgress()
+    alertBox(err.message || t('speakError'))
+  } finally {
+    $('speak').disabled = false
+    setBusy(false)
+  }
+})
 
 // ---- Start ------------------------------------------------------------------
 applyLanguage()

@@ -89,6 +89,10 @@
           <div id="verdict-confidence" class="confidence"></div>
         </div>
       </div>
+      <button type="button" id="speak" class="big-btn speak-btn" hidden>
+        <span aria-hidden="true">🔊</span> <span id="speak-label" data-i18n="speakBtn">Read aloud</span>
+      </button>
+      <audio id="speak-audio" hidden></audio>
       <p id="ai-pending" class="ai-pending" hidden><span class="spinner small" aria-hidden="true"></span> <span data-i18n="aiChecking">The offline AI is double-checking…</span></p>
       <h2 data-i18n="whyTitle">Why</h2>
       <ul id="reasons" class="reasons"></ul>

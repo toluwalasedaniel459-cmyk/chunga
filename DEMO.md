@@ -4,7 +4,8 @@
 
 - Run `npm run setup-models` (online), then `npm start` once, so the models are downloaded and cached.
 - Use a PC with **AVX2** if you can (`npm run check-cpu`): voice notes only work there, and the AI is faster.
-- Start the app with voice notes on: `$env:CHUNGA_AUDIO="on"; npm start`. Wait until the yellow "Loading AI…" box disappears.
+- For the spoken warning: `npm run setup-models -- --voice`, then `npm run prepare-voice` (pre-generates every sentence, so playback on camera is instant).
+- Start the app with voice notes and reading aloud on: `$env:CHUNGA_AUDIO="on"; $env:CHUNGA_TTS="on"; npm start`. Wait until the yellow "Loading AI…" box disappears.
 - Have ready:
   - the fake reversal SMS (below), copied to the clipboard
   - a fake "Safaricom agent" voice note, e.g. `data/audio/audio-scam-agent.wav`, or better, your own Swahili recording from `data/audio/RECORDING_SCRIPT.md`
@@ -16,7 +17,7 @@
 
 - **Don't speed up or cut AI waiting time without saying so.** If you cut, show a caption such as
   *"AI double-check took 2 min 30 s on this laptop. Cut for time."*
-- If the spoken warning isn't built yet (TTS, not started), skip that beat. Don't fake it.
+- The spoken warning needs an AVX2 PC. If it doesn't work there, skip that beat. Don't fake it with another voice.
 
 Fake reversal SMS to paste (synthetic, sender optional: `+2547XX XXX 214`):
 
@@ -41,7 +42,7 @@ Hello, I have sent you 3,500 by mistake, it was meant for my mother's hospital b
 | **0:35–1:10** | **Paste message** tab: paste the follow-up SMS, sender `+2547XX XXX 214`, press **Check message**. The red **SCAM** card appears instantly; "AI is double-checking…" counter runs; (caption if cut) final card: *Decided by: rules + AI agree*. | "I paste the message. Chunga answers straight away: SCAM. It asks you to send money back, and that's the reversal trick. Meanwhile the local AI double-checks… and agrees. Each reason says whether it came from a rule or the AI, and the advice is simple: don't reply, don't send money, check your balance yourself." |
 | **1:10–1:20** | Tap **SW**: the same result switches to Swahili instantly. | "One tap for Swahili." |
 | **1:20–1:55** | **Voice note** tab → **Choose a voice note** → the fake agent clip. Show "Listening to the voice note…", then **What we heard** (the transcript), then the verdict with the *From voice note* label. | "Scams also come as calls and voice notes. Here's a fake Safaricom agent. QVAC's Whisper model turns it into text on the laptop, offline, and the same checks run on it. It asks for the code we just sent: SCAM." |
-| **1:55–2:05** | *(Only if text-to-speech is built.)* Tap the speak button; the Swahili warning plays. | "And Chunga can read the warning aloud in Swahili for people who find reading hard." |
+| **1:55–2:05** | With **SW** selected, tap **🔊 Soma kwa sauti**; the Swahili warning plays (QVAC Chatterbox). | "And Chunga can read the warning aloud in Swahili for people who find reading hard." |
 | **2:05–2:30** | Editor: `src/qvac/llm.js`, highlight `loadModel` and `completion` with `responseFormat: json_schema`. Then `src/combine.js`, highlight the three cases. | "Under the hood: QVAC loads a 1-billion-parameter Llama model once, and a JSON schema forces it to answer in our format. A small model can be wrong, so rules set a floor: a PIN request or a 'send it back' is always a scam, and the AI alone can never shout SCAM." |
 | **2:30–2:50** | README eval table, or the terminal output of the eval. | "On our 36-message test set, no scam was marked safe, with rules plus AI at 89% exact accuracy. We're honest about the limits too: we wrote the test set ourselves, and on an old laptop the AI takes a couple of minutes, while the rules answer instantly." |
 | **2:50–3:00** | Logo + repo link. | "Chunga: own your AI, protect your money." |

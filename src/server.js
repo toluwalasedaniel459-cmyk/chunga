@@ -14,6 +14,8 @@
 //   POST /api/check-image  (raw file body,
 //        header X-Filename)                → ocr-text → rules → ai-progress… → final
 // OCR loads on the first screenshot (not at startup) to save memory on small laptops.
+//   POST /api/speak  {lang, verdict, reasonCodes} → audio/wav (needs CHUNGA_TTS=on;
+//        like Whisper, QVAC's TTS engine crashes on CPUs without AVX/AVX2)
 import http from 'node:http'
 import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
 import { extname, join, resolve } from 'node:path'
@@ -22,12 +24,15 @@ import { analyse } from './detect/analyse.js'
 import { initLlm } from './qvac/llm.js'
 import { initWhisper, transcribeFile, WHISPER_MODEL_NAME } from './qvac/transcribe.js'
 import { readImage } from './qvac/ocr.js'
+import { speakSentences } from './qvac/tts.js'
+import { spokenSentences } from './detect/spoken.js'
 
 const PORT = Number(process.env.PORT || 3000)
 const ROOT = resolve(import.meta.dirname, '..')
 const PUBLIC_DIR = join(ROOT, 'public')
 const UPLOAD_DIR = join(ROOT, 'uploads')
 const AUDIO_ENABLED = process.env.CHUNGA_AUDIO === 'on'
+const TTS_ENABLED = process.env.CHUNGA_TTS === 'on'
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024 // 25 MB is plenty for a voice note
 const MAX_TEXT_CHARS = 2000
 
@@ -38,7 +43,7 @@ const AUDIO_EXT = { '.mp3': '.mp3', '.m4a': '.m4a', '.ogg': '.ogg', '.opus': '.o
 const IMAGE_EXT = { '.png': '.png', '.jpg': '.jpg', '.jpeg': '.jpg', '.bmp': '.bmp' }
 
 // ---- Model status, shown in the UI ("Loading AI…") -------------------------
-const status = { llm: 'loading', audio: AUDIO_ENABLED ? 'loading' : 'off', image: 'on-demand', whisperModel: WHISPER_MODEL_NAME }
+const status = { llm: 'loading', audio: AUDIO_ENABLED ? 'loading' : 'off', image: 'on-demand', tts: TTS_ENABLED ? 'on-demand' : 'off', whisperModel: WHISPER_MODEL_NAME }
 
 // The LLM runs one job at a time, so checks wait in line.
 let queue = Promise.resolve()
@@ -173,6 +178,21 @@ async function handleCheckImage (req, res) {
   res.end()
 }
 
+async function handleSpeak (req, res) {
+  if (!TTS_ENABLED) return sendJson(res, 503, { error: 'Reading aloud is turned off on this computer.' })
+  const body = JSON.parse((await readBody(req, 16 * 1024)).toString('utf8') || '{}')
+  const lang = body.lang === 'sw' ? 'sw' : 'en'
+  // Rebuild the sentences from our own fixed text; never speak text sent by the page.
+  const sentences = spokenSentences({ verdict: body.verdict, reasonCodes: Array.isArray(body.reasonCodes) ? body.reasonCodes : [] }, lang)
+  if (!sentences.length) return sendJson(res, 400, { error: 'Nothing to read.' })
+
+  const { wav, ms } = await inQueue(() => speakSentences(sentences, lang))
+  status.tts = 'ready'
+  console.log(`[speak] ${lang} ${sentences.length} sentences, generated in ${ms}ms (0 = all cached)`)
+  res.writeHead(200, { 'Content-Type': 'audio/wav', 'Content-Length': wav.length })
+  res.end(wav)
+}
+
 async function serveStatic (req, res) {
   const urlPath = new URL(req.url, 'http://localhost').pathname
   const file = resolve(PUBLIC_DIR, '.' + (urlPath === '/' ? '/index.html' : urlPath))
@@ -193,6 +213,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/check-text') return await handleCheckText(req, res)
     if (req.method === 'POST' && req.url === '/api/check-audio') return await handleCheckAudio(req, res)
     if (req.method === 'POST' && req.url === '/api/check-image') return await handleCheckImage(req, res)
+    if (req.method === 'POST' && req.url === '/api/speak') return await handleSpeak(req, res)
     if (req.method === 'GET') return await serveStatic(req, res)
     sendJson(res, 404, { error: 'Not found' })
   } catch (err) {

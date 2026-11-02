@@ -9,6 +9,13 @@ export const VERDICT_LABELS = {
   SAFE: { en: 'LOOKS SAFE', sw: 'INAONEKANA SALAMA' }
 }
 
+// First sentence when the result is read aloud.
+export const SPOKEN_VERDICT = {
+  SCAM: { en: 'Warning. This message is a scam.', sw: 'Tahadhari. Ujumbe huu ni utapeli.' },
+  SUSPICIOUS: { en: 'Be careful. This message is suspicious.', sw: 'Kuwa mwangalifu. Ujumbe huu unatiliwa shaka.' },
+  SAFE: { en: 'This message looks safe.', sw: 'Ujumbe huu unaonekana salama.' }
+}
+
 export const REASONS = {
   ASKS_PIN: {
     en: 'It asks for your PIN or a secret code. Real M-PESA staff never ask for this.',

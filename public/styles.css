@@ -137,6 +137,7 @@ textarea { resize: vertical; min-height: 140px; }
 .verdict.SAFE .verdict-icon::after { content: "✓"; }
 .verdict-label { font-size: 1.6rem; font-weight: 900; line-height: 1.1; }
 .confidence { color: var(--ink); font-weight: 600; font-size: .9rem; margin-top: 2px; }
+.speak-btn { background: transparent; color: var(--ink); border: 2px solid var(--ink); min-height: 56px; margin-top: 12px; }
 .ai-pending { font-size: .9rem; color: var(--muted); margin: 10px 0 0; }
 .result h2 { font-size: 1.05rem; margin: 18px 0 6px; }
 .reasons, .advice { margin: 0; padding-left: 1.3em; }

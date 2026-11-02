@@ -13,7 +13,8 @@
     "setup-models": "node scripts/setup-models.js",
     "check-cpu": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-cpu.ps1",
     "make-images": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-images.ps1",
-    "bench-ocr": "node scripts/bench-ocr.js"
+    "bench-ocr": "node scripts/bench-ocr.js",
+    "prepare-voice": "node scripts/prepare-voice.js"
   },
   "keywords": [],
   "author": "",
