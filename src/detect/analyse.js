@@ -3,46 +3,11 @@
 // Flow:  rules (instant)  →  local QVAC LLM  →  combine()  →  user-facing result
 import { runRules } from './rules.js'
 import { parseLlmOutput } from './parse.js'
-import { combine, RULE_WEIGHT } from '../combine.js'
+import { combine } from '../combine.js'
 import { askLlm } from '../qvac/llm.js'
-import { VERDICT_LABELS, REASONS, ADVICE } from './messages.js'
+import { buildResult } from './result.js'
 
-// Build the user-facing result in the chosen language ('en' or 'sw').
-export function buildResult (combined, lang = 'en') {
-  const { verdict, confidence, flags, decidedBy, ai } = combined
-
-  // Up to 3 reasons: strongest rule flags first, then new AI flags.
-  const ruleFlags = flags.filter((f) => f.source === 'rule').sort((a, b) => RULE_WEIGHT[b.code] - RULE_WEIGHT[a.code])
-  let aiFlags = flags.filter((f) => f.source === 'ai')
-  // The small AI writes its flags in English only. In Swahili we show one
-  // checked Swahili sentence instead, so Swahili users only see our own text.
-  if (lang === 'sw' && aiFlags.length) aiFlags = [{ source: 'ai', code: 'AI_FLAGGED' }]
-  let shown = [...ruleFlags, ...aiFlags].slice(0, 3)
-  if (shown.length === 0) shown = [{ source: 'rule', code: verdict === 'SAFE' ? 'NO_RED_FLAGS' : 'AI_FLAGGED' }]
-
-  const reasons = shown.map((f) => ({
-    source: f.source,
-    code: f.code ?? null,
-    // Coded flags use our checked EN/SW text; uncoded ones are the AI's English text.
-    text: f.code ? REASONS[f.code][lang] : f.text
-  }))
-
-  // The AI's one-line summary, only when it agrees with the final verdict
-  // (otherwise it would contradict what we show). Hidden in Swahili: the 1B
-  // model's Swahili was often wrong in our tests.
-  const summary = ai && ai.verdict === verdict && lang === 'en' ? ai.explanation_en : ''
-
-  return {
-    verdict,
-    label: VERDICT_LABELS[verdict][lang],
-    confidence,
-    reasons,
-    summary,
-    advice: ADVICE[verdict].map((a) => a[lang]), // hand-written, so always clear in both languages
-    decidedBy,
-    lang
-  }
-}
+export { buildResult }
 
 /**
  * Analyse one message.

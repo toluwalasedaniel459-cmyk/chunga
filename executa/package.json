@@ -1,0 +1,45 @@
+{
+  "name": "chunga-executa",
+  "version": "1.0.0",
+  "description": "Anna Executa plugin: offline mobile-money scam checker (rules + local QVAC LLM). Tool: check_message.",
+  "type": "module",
+  "bin": {
+    "chunga-executa": "plugin.js"
+  },
+  "files": [
+    "plugin.js",
+    "ai-worker.js",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "prepack": "node build.js",
+    "test": "node smoke-test.js"
+  },
+  "engines": {
+    "node": ">=22.17"
+  },
+  "dependencies": {
+    "@qvac/sdk": "0.22.0"
+  },
+  "keywords": [
+    "anna",
+    "executa",
+    "scam",
+    "fraud",
+    "m-pesa",
+    "mobile-money",
+    "swahili",
+    "offline",
+    "qvac"
+  ],
+  "homepage": "https://github.com/toluwalasedaniel459-cmyk/chunga/tree/master/executa",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toluwalasedaniel459-cmyk/chunga.git",
+    "directory": "executa"
+  },
+  "license": "MIT"
+}

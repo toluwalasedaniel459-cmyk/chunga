@@ -23,3 +23,8 @@ uploads/
 Thumbs.db
 .vscode/
 *.log
+
+# Executa plugin build output
+executa/lib/
+executa/LICENSE
+*.tgz

@@ -107,8 +107,10 @@ export async function closeLlm () {
 
 // ---- Classify one message ---------------------------------------------------
 // onToken(textSoFar) is called while the model streams, so the UI can show progress.
+// onRun(run) receives the QVAC run as soon as it starts (its `requestId` can be
+// passed to cancel() to stop a slow answer).
 // Returns { raw, timing } – parsing/validation happens in parse.js.
-export async function askLlm (text, { sender = '', onToken, kvCache = false } = {}) {
+export async function askLlm (text, { sender = '', onToken, onRun, kvCache = false } = {}) {
   const id = await initLlm()
   const start = performance.now()
   let firstTokenMs = null
@@ -127,6 +129,7 @@ export async function askLlm (text, { sender = '', onToken, kvCache = false } = 
       ...(IS_QWEN3 ? { reasoning_budget: 0 } : {})
     }
   })
+  onRun?.(run)
 
   for await (const event of run.events) {
     if (event.type === 'contentDelta') {
